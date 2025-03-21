@@ -402,7 +402,7 @@ function InterviewPlatform() {
           
           const languageOutputMap = {
             python: "Python 3.9.7\n>>> Executing...\n" + 
-                    (code.includes("print") ? "Hello, world!\n" : "") + 
+                    (code.includes("print") ? "Hello, world!\n  " : "") + 
                     "Program executed successfully.",
                     
             java: "OpenJDK 11.0.12\n> Compiling...\n" + 
@@ -459,6 +459,7 @@ function InterviewPlatform() {
     }, 500);
   };
   
+  // Join room screen
   if (!joined) {
     return (
       <div className={`flex h-screen w-full flex-col items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'} p-4`}>
@@ -574,20 +575,22 @@ function InterviewPlatform() {
             CodeInterview <span className="text-xs font-normal rounded bg-blue-600 text-white px-2 py-1 ml-1">{role}</span>
           </h1>
           
-          <select
-            onChange={handleLanguageChange}
-            value={language}
-            className={`rounded-md ${themeClasses.subheader} p-2 mr-2 text-sm border ${themeClasses.border}`}
-          >
-            <option value="javascript">JavaScript</option>
-            <option value="python">Python</option>
-            <option value="java">Java</option>
-            <option value="csharp">C#</option>
-            <option value="cpp">C++</option>
-            <option value="ruby">Ruby</option>
-            <option value="php">PHP</option>
-            <option value="go">Go</option>
-          </select>
+          {role === 'candidate' && (
+            <select
+              onChange={handleLanguageChange}
+              value={language}
+              className={`rounded-md ${themeClasses.subheader} p-2 mr-2 text-sm border ${themeClasses.border}`}
+            >
+              <option value="javascript">JavaScript</option>
+              <option value="python">Python</option>
+              <option value="java">Java</option>
+              <option value="csharp">C#</option>
+              <option value="cpp">C++</option>
+              <option value="ruby">Ruby</option>
+              <option value="php">PHP</option>
+              <option value="go">Go</option>
+            </select>
+          )}
         </div>
         
         <div className="flex items-center gap-2">
@@ -600,20 +603,24 @@ function InterviewPlatform() {
             </button>
           )}
           
-          <button 
-            onClick={runCode}
-            disabled={isRunning || (role === 'candidate' && isCodeLocked)}
-            className={`rounded-md p-2 text-sm ${isRunning || (role === 'candidate' && isCodeLocked) ? 'bg-gray-500' : themeClasses.buttonSuccess}`}
-          >
-            {isRunning ? '⏳ Running...' : '▶️ Run'}
-          </button>
-          
-          <button 
-            onClick={triggerRemoteRun}
-            className={`rounded-md p-2 text-sm ${themeClasses.buttonSecondary}`}
-          >
-            🔄 Request Run
-          </button>
+          {role === 'candidate' && (
+            <>
+              <button 
+                onClick={runCode}
+                disabled={isRunning || (role === 'candidate' && isCodeLocked)}
+                className={`rounded-md p-2 text-sm ${isRunning || (role === 'candidate' && isCodeLocked) ? 'bg-gray-500' : themeClasses.buttonSuccess}`}
+              >
+                {isRunning ? '⏳ Running...' : '▶️ Run'}
+              </button>
+              
+              <button 
+                onClick={triggerRemoteRun}
+                className={`rounded-md p-2 text-sm ${themeClasses.buttonSecondary}`}
+              >
+                🔄 Request Run
+              </button>
+            </>
+          )}
           
           <button
             onClick={requestScreenShare}
@@ -631,86 +638,90 @@ function InterviewPlatform() {
         </div>
       </div>
       
-      {/* Status bar */}
-      <div className={`flex justify-between items-center ${themeClasses.subheader} px-4 py-2 ${themeClasses.text} text-sm`}>
-        <div className="flex items-center gap-2">
-          <span className="font-medium">Language:</span>
-          <span className="font-bold bg-blue-600 text-white rounded px-2 py-0.5">{language}</span>
+      {/* Status bar for candidate */}
+      {role === 'candidate' && (
+        <div className={`flex justify-between items-center ${themeClasses.subheader} px-4 py-2 ${themeClasses.text} text-sm`}>
+          <div className="flex items-center gap-2">
+            <span className="font-medium">Language:</span>
+            <span className="font-bold bg-blue-600 text-white rounded px-2 py-0.5">{language}</span>
+            
+            {isCodeLocked && (
+              <span className="rounded bg-red-600 px-2 py-0.5 text-sm font-bold text-white ml-2">
+                Editor Locked by Interviewer
+              </span>
+            )}
+          </div>
           
-          {role === 'candidate' && isCodeLocked && (
-            <span className="rounded bg-red-600 px-2 py-0.5 text-sm font-bold text-white ml-2">
-              Editor Locked by Interviewer
-            </span>
-          )}
+          <div className="flex items-center gap-2">
+            {isScreenSharing && (
+              <span className="rounded bg-green-600 px-2 py-0.5 text-sm font-bold text-white">
+                Screen Sharing Active
+              </span>
+            )}
+            
+            <button 
+              onClick={() => navigator.clipboard.writeText(code)}
+              className={`rounded-md text-xs px-2 py-1 ${themeClasses.buttonSecondary}`}
+            >
+              Copy Code
+            </button>
+            
+            <button 
+              onClick={shareCodeInChat}
+              className={`rounded-md text-xs px-2 py-1 ${themeClasses.buttonSecondary}`}
+            >
+              Share in Chat
+            </button>
+          </div>
         </div>
-        
-        <div className="flex items-center gap-2">
-          {isScreenSharing && (
-            <span className="rounded bg-green-600 px-2 py-0.5 text-sm font-bold text-white">
-              Screen Sharing Active
-            </span>
-          )}
-          
-          <button 
-            onClick={() => navigator.clipboard.writeText(code)}
-            className={`rounded-md text-xs px-2 py-1 ${themeClasses.buttonSecondary}`}
-          >
-            Copy Code
-          </button>
-          
-          <button 
-            onClick={shareCodeInChat}
-            className={`rounded-md text-xs px-2 py-1 ${themeClasses.buttonSecondary}`}
-          >
-            Share in Chat
-          </button>
-        </div>
-      </div>
+      )}
       
       {/* Main content - side-by-side layout */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Left side: Code editor and output */}
-        <div className={`flex w-1/2 flex-col overflow-hidden border-r ${themeClasses.border}`}>
-          {/* Editor */}
-          <div className="flex-1 overflow-hidden">
-            <textarea
-              value={code}
-              onChange={handleCodeChange}
-              className={`h-full w-full p-4 font-mono ${themeClasses.editor}`}
-              style={{
-                resize: 'none',
-                outline: 'none',
-                tabSize: 2,
-                lineHeight: 1.5
-              }}
-              placeholder="Write your code here..."
-              spellCheck="false"
-              disabled={role === 'candidate' && isCodeLocked}
-            />
-          </div>
-          
-          {/* Output console */}
-          <div className={`h-1/3 border-t ${themeClasses.border}`}>
-            <div className={`flex items-center justify-between ${themeClasses.header} px-4 py-2 ${themeClasses.text}`}>
-              <span className="font-bold">Output</span>
-              <button 
-                onClick={() => setOutput('')}
-                className={`rounded text-xs px-2 py-1 ${themeClasses.buttonSecondary}`}
-              >
-                Clear
-              </button>
+        {/* Left side: Code editor and output (only for candidate) */}
+        {role === 'candidate' && (
+          <div className={`flex w-1/2 flex-col overflow-hidden border-r ${themeClasses.border}`}>
+            {/* Editor */}
+            <div className="flex-1 overflow-hidden">
+              <textarea
+                value={code}
+                onChange={handleCodeChange}
+                className={`h-full w-full p-4 font-mono ${themeClasses.editor}`}
+                style={{
+                  resize: 'none',
+                  outline: 'none',
+                  tabSize: 2,
+                  lineHeight: 1.5
+                }}
+                placeholder="Write your code here..."
+                spellCheck="false"
+                disabled={role === 'candidate' && isCodeLocked}
+              />
             </div>
-            <pre 
-              ref={outputRef}
-              className={`h-full max-h-full overflow-auto p-4 font-mono text-sm ${themeClasses.console}`}
-            >
-              {output}
-            </pre>
+            
+            {/* Output console */}
+            <div className={`h-1/3 border-t ${themeClasses.border}`}>
+              <div className={`flex items-center justify-between ${themeClasses.header} px-4 py-2 ${themeClasses.text}`}>
+                <span className="font-bold">Output</span>
+                <button 
+                  onClick={() => setOutput('')}
+                  className={`rounded text-xs px-2 py-1 ${themeClasses.buttonSecondary}`}
+                >
+                  Clear
+                </button>
+              </div>
+              <pre 
+                ref={outputRef}
+                className={`h-full max-h-full overflow-auto p-4 font-mono text-sm ${themeClasses.console}`}
+              >
+                {output}
+              </pre>
+            </div>
           </div>
-        </div>
+        )}
         
-        {/* Right side: Video call */}
-        <div className="w-1/2 overflow-hidden">
+        {/* Video call container (full width for interviewer, half width for candidate) */}
+        <div className={`${role === 'candidate' ? 'w-1/2' : 'w-full'} overflow-hidden`}>
           <div className="h-full" ref={jitsiContainerRef}></div>
         </div>
       </div>
