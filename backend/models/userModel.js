@@ -8,7 +8,7 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  role: { type: String, enum: ["candidate", "interviewer"] },
+  role: { type: String, enum: ["candidate", "interviewer"],default:"candidate" },
   profilePicture: String,
   gender: { type: String, required: true, enum: ["male", "female", "other"] },
 

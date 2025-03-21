@@ -41,7 +41,7 @@ export const userRegister = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" } // Short expiry for registration flow
     );
- 
+
 
     return res.status(201).json({
       success: true,
