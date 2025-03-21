@@ -21,7 +21,7 @@ import {
   searchCandidates,
   getCandidateProfile,
   getCandidateFeedbackHistory
-} from '../controllers/interviewerController.js';
+} from '../controllers/interviewer.controller.js';
 // import { authMiddleware } from '../middleware/authMiddleware.js';
 // import { interviewerMiddleware } from '../middleware/roleMiddleware.js';
 
