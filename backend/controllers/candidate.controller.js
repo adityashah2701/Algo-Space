@@ -1,6 +1,8 @@
+// controllers/candidateController.js
 import User from '../models/userModel.js';
-import Interview from '../models/interviewModel.js';
-import { uploadToCloud, deleteFromCloud } from '../utils/cloudStorage.js'; // Assuming cloud storage for resume
+import Interview from '../models/interviewModel.js'; // Assuming you have an Interview model
+import { uploadToCloudinary, deleteFromCloudinary, getPublicIdFromUrl } from '../utils/uploadToCloudinary.js';
+
 
 export const getCandidateProfile = async (req, res) => {
   try {
@@ -77,8 +79,14 @@ export const uploadResume = async (req, res) => {
     
     const resumeFile = req.files.resume;
     
-    // Upload to cloud storage
-    const resumeUrl = await uploadToCloud(resumeFile, 'resumes', userId);
+    // Create temporary file path from buffer
+    const tempFilePath = resumeFile.tempFilePath;
+    
+    // Upload to Cloudinary
+    const resumeUrl = await uploadToCloudinary(tempFilePath, {
+      folder: 'resumes',
+      public_id: `resume_${userId}_${Date.now()}`
+    });
     
     // Update user profile with resume URL
     const updatedUser = await User.findByIdAndUpdate(
@@ -120,8 +128,12 @@ export const deleteResume = async (req, res) => {
       return res.status(404).json({ message: 'No resume found to delete' });
     }
     
-    // Delete from cloud storage
-    await deleteFromCloud(resumeUrl);
+    // Extract public_id from resumeUrl and delete from Cloudinary
+    const publicId = getPublicIdFromUrl(resumeUrl);
+    
+    if (publicId) {
+      await deleteFromCloudinary(publicId);
+    }
     
     // Update user profile to remove resume URL
     const updatedUser = await User.findByIdAndUpdate(
