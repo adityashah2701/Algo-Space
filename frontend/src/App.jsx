@@ -4,7 +4,6 @@ import { ThemeProvider } from './context/ThemeProvider'
 import { Route, Routes } from 'react-router-dom'
 import LoginPage from './pages/Login/Login'
 import SignupPage from './pages/Signup/SignUP'
-import RoleSelectionForm from './pages/SelectRole/RoleSelectionForm'
 import CandidateDashboard from './pages/CandidateDashboard/CandidateDashboard'
 import InterviewerDashboard from './pages/InterviewerDashboard/InterviewerDashboard'
 import Header from './components/Header/Header'
@@ -25,7 +24,6 @@ const App = () => {
         <Route path='/' element={<HomePage/>}/>
         
       
-        <Route path='/role' element={<RoleSelectionForm/>}/>
   
         <Route path='/candidate-dash' element={<CandidateDashboard/>}/>
     

@@ -11,6 +11,7 @@ import {
   MapPin,
   Award
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const HomePage= () => {
   const [email, setEmail] = useState('');
@@ -128,16 +129,13 @@ const HomePage= () => {
             className="w-full pl-10 pr-4 py-3 bg-transparent border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <button 
+        <Button 
           type="submit" 
-          className="bg-blue-600 text-white px-6 py-2 w-full rounded-lg hover:bg-blue-700 transition flex items-center justify-center w-full md:w-auto"
+          className="bg-blue-600 text-white py-6  px-10 rounded-lg hover:bg-blue-700 transition justify-center flex items-center "
         >
           Find Jobs
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </button>
+      
+        </Button>
       </form>
     </div>
     
