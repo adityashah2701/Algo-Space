@@ -21,11 +21,6 @@ export const getCandidateProfile = async (req, res) => {
   }
 };
 
-/**
- * Update candidate profile information
- * @route PUT /api/candidate/profile
- * @access Private (Candidate only)
- */
 export const updateCandidateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -63,11 +58,6 @@ export const updateCandidateProfile = async (req, res) => {
   }
 };
 
-/**
- * Upload resume
- * @route POST /api/candidate/resume
- * @access Private (Candidate only)
- */
 export const uploadResume = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -106,11 +96,6 @@ export const uploadResume = async (req, res) => {
   }
 };
 
-/**
- * Delete resume
- * @route DELETE /api/candidate/resume
- * @access Private (Candidate only)
- */
 export const deleteResume = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -152,11 +137,6 @@ export const deleteResume = async (req, res) => {
   }
 };
 
-/**
- * Update candidate skills
- * @route PUT /api/candidate/skills
- * @access Private (Candidate only)
- */
 export const updateSkills = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -190,11 +170,6 @@ export const updateSkills = async (req, res) => {
   }
 };
 
-/**
- * Update preferred roles
- * @route PUT /api/candidate/preferred-roles
- * @access Private (Candidate only)
- */
 export const updatePreferredRoles = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -228,11 +203,6 @@ export const updatePreferredRoles = async (req, res) => {
   }
 };
 
-/**
- * Update coding profiles
- * @route PUT /api/candidate/coding-profiles
- * @access Private (Candidate only)
- */
 export const updateCodingProfiles = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -266,11 +236,6 @@ export const updateCodingProfiles = async (req, res) => {
   }
 };
 
-/**
- * Get available interviewers
- * @route GET /api/candidate/interviewers
- * @access Private (Candidate only)
- */
 export const getAvailableInterviewers = async (req, res) => {
   try {
     // Optional filter by expertise
@@ -296,11 +261,6 @@ export const getAvailableInterviewers = async (req, res) => {
   }
 };
 
-/**
- * Request an interview
- * @route POST /api/candidate/request-interview
- * @access Private (Candidate only)
- */
 export const requestInterview = async (req, res) => {
   try {
     const candidateId = req.user.id;
@@ -342,11 +302,6 @@ export const requestInterview = async (req, res) => {
   }
 };
 
-/**
- * Get all interviews for candidate
- * @route GET /api/candidate/interviews
- * @access Private (Candidate only)
- */
 export const getCandidateInterviews = async (req, res) => {
   try {
     const candidateId = req.user.id;
@@ -369,11 +324,6 @@ export const getCandidateInterviews = async (req, res) => {
   }
 };
 
-/**
- * Cancel an interview request
- * @route DELETE /api/candidate/interviews/:interviewId
- * @access Private (Candidate only)
- */
 export const cancelInterviewRequest = async (req, res) => {
   try {
     const candidateId = req.user.id;
