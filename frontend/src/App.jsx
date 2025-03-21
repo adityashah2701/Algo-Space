@@ -10,12 +10,10 @@ import Header from "./components/Header/Header";
 import HomePage from "./pages/Home/HomePage";
 // import QuizPage from './pages/QuizApp/QuizApp'
 
-import WEBRTC from "./pages/WEBRTC/WEBRTC";
-import ProfileCompletion from "./pages/ProfileCompletion/ProfileCompletion";
-import ProtectedRoute from "./components/ProtectedRoute";
-import { axiosInstance } from "./lib/axios";
-import { useAuthStore } from "./store/useAuthStore";
-import JobPostingPage from "./pages/JobForm/JobForm";
+
+
+import WEBRTC from './pages/WEBRTC/WEBRTC'
+import ProfileCompletion from './pages/ProfileCompletion/ProfileCompletion'
 
 const App = () => {
   const { setUser } = useAuthStore();
@@ -34,51 +32,26 @@ const App = () => {
   return (
 
     <div>
-      <ThemeProvider defaultTheme="dark">
-        <Header />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
+     <ThemeProvider defaultTheme='dark'>
+    <Header/>
+      <Routes>
+        <Route path='/' element={<HomePage/>}/>
+        
+      
+  
+        <Route path='/candidate-dash' element={<CandidateDashboard/>}/>
+    
+        <Route path='/interviewer-dash' element={<InterviewerDashboard/>}/>
 
-          <Route
-            path="/candidate-dashboard"
-            element={
-              <ProtectedRoute>
-                <CandidateDashboard />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/interviewer-dashboard"
-            element={
-              <ProtectedRoute>
-                <InterviewerDashboard />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* <Route path='/quiz' element={<QuizPage/>}/> */}
-
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<SignupPage />} />
-
-          <Route path="/complete-profile" element={<ProfileCompletion />} />
-          <Route
-            path="/webrtc"
-            element={
-              <ProtectedRoute>
-                <WEBRTC />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/create-job"
-            element={
-              <ProtectedRoute>
-                <JobPostingPage/>
-              </ProtectedRoute>
-            }
-          />
+        {/* <Route path='/quiz' element={<QuizPage/>}/> */}
+      
+        <Route path='/login' element={<LoginPage/>}/>
+        <Route path='/register' element={<SignupPage/>}/>
+    
+        <Route path='/complete-profile' element={<ProfileCompletion/>}/>
+        <Route path='/webrtc' element={<WEBRTC/>}/>
+        
+       
         </Routes>
       </ThemeProvider>
     </div>

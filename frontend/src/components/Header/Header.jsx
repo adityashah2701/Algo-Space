@@ -13,8 +13,8 @@ function Header() {
   const { user } = useAuthStore();
   const navigation = [
     { name: "FIND JOBS", href: "/jobs", icon: <Search className="h-4 w-4 mr-2" /> },
-    { name: "MY APPLICATIONS", href: "/applications", icon: <Briefcase className="h-4 w-4 mr-2" /> },
-    { name: "ALGORITHM CHALLENGES", href: "/challenges", icon: <Code className="h-4 w-4 mr-2" /> },
+    // { name: "MY APPLICATIONS", href: "/applications", icon: <Briefcase className="h-4 w-4 mr-2" /> },
+    { name: "ALGORITHM CHALLENGES", href: "/algo-challenge", icon: <Code className="h-4 w-4 mr-2" /> },
     { name: "LEARNING RESOURCES", href: "/resources", icon: <BookOpen className="h-4 w-4 mr-2" /> },
     { name: "COMPANIES", href: "/companies", icon: <Building className="h-4 w-4 mr-2" /> }
   ];
