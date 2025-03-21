@@ -2,6 +2,7 @@
 import User from '../models/userModel.js';
 import Interview from '../models/interviewModel.js'; // Assuming you have an Interview model
 import { uploadToCloudinary, deleteFromCloudinary, getPublicIdFromUrl } from '../utils/uploadToCloudinary.js';
+import { Job } from '../models/job.model.js';
 
 
 export const getCandidateProfile = async (req, res) => {
@@ -381,3 +382,32 @@ export const cancelInterviewRequest = async (req, res) => {
     return res.status(500).json({ message: 'Server error' });
   }
 };
+export const applyToJob = async (req, res) => {
+  try {
+    const { jobId } = req.body;
+    const job = await Job.findById(jobId);
+    
+    if (!job) return res.status(404).json({ message: "Job not found" });
+    
+    // Check if job status is closed (add this field to your schema if needed)
+    if (job.status === "closed") return res.status(400).json({ message: "Job is closed" });
+    
+    // Check if candidate has already applied using proper array method
+    const alreadyApplied = job.candidateApplied.some(
+      application => application.candidateId.toString() === req.candidate._id.toString()
+    );
+    
+    if (alreadyApplied) {
+      return res.status(400).json({ message: "You have already applied to this job" });
+    }
+    
+    // Add candidate to applied list
+    job.candidateApplied.push({ candidateId: req.candidate._id });
+    await job.save();
+    
+    return res.status(200).json({ message: "Job applied successfully" });
+  } catch (error) {
+    console.error("Error in applying to job:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+}

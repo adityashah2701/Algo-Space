@@ -19,7 +19,23 @@ const jobSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
-    }
+    },
+    candidateApplied:[{
+        candidateId:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            
+        },
+        appliedAt: {
+            type: Date,
+            default: Date.now
+        },
+        status: {
+            type: String,
+            enum: ['Applied', 'Shortlisted', 'Selected', 'Rejected'],
+            default: 'Applied'
+        }
+    }]
 
 },{
     timestamps: true

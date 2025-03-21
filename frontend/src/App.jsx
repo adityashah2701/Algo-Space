@@ -21,6 +21,9 @@ import OCR from './pages/OCR/OCR'
 import Score from './pages/Score/Score'
 import { useAuthStore } from "./store/useAuthStore";
 import { axiosInstance } from "./lib/axios";
+import FindJobs from "./pages/FindJobs/FindJobs";
+import { Toaster } from "react-hot-toast";
+
 
 
 const App = () => {
@@ -62,12 +65,14 @@ const App = () => {
         <Route path='/algo-challenge' element={<Algochallenge/>}/>
         <Route path='/ocr' element={<OCR/>}/>
         <Route path='/score' element={<Score/>}/>
+        <Route path='/jobs' element={<FindJobs/>}/>
 
         
        
 
         </Routes>
       </ThemeProvider>
+      <Toaster/>
     </div>
   );
 };

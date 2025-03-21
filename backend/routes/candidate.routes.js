@@ -12,6 +12,7 @@ import {
   requestInterview,
   getCandidateInterviews,
   cancelInterviewRequest,
+  applyToJob,
 } from '../controllers/candidate.controller.js';
 import { authMiddleware, candidateMiddleware } from '../middlewares/auth.middleware.js';
 import upload from '../config/multer.js';
@@ -42,7 +43,7 @@ router.put('/coding-profiles', updateCodingProfiles);
 
 // Interview routes
 router.get('/interviewers', getAvailableInterviewers);
-router.post('/request-interview', requestInterview);
+router.put('/apply', applyToJob);
 router.get('/interviews', getCandidateInterviews);
 router.delete('/interviews/:interviewId', cancelInterviewRequest);
 

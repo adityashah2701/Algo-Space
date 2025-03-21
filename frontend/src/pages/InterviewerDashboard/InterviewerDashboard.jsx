@@ -20,7 +20,7 @@ const InterviewerDashboard = () => {
               <TabsTrigger value="profile">Profile</TabsTrigger>
               <TabsTrigger value="schedule">Schedule</TabsTrigger>
               <TabsTrigger value="candidates">Candidates</TabsTrigger>
-              <TabsTrigger value="availability">Availability</TabsTrigger>
+              <TabsTrigger value="availability">Interview Requests</TabsTrigger>
             </TabsList>
             <TabsContent value="profile">
               <ProfileManagement />
