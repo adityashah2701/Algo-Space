@@ -39,93 +39,67 @@ app.use("/api/candidate",candidateRoutes);
 app.use("/api/interviewer",interviewrRoutes);
 
 
-
-// // Initialize OpenAI client
-// const openai = new OpenAI({
-//   apiKey: process.env.OPENAI_API_KEY
-// });
-
-// app.post('/api/generate-quiz', async (req, res) => {
-//   try {
-//     const response = await openai.chat.completions.create({
-//       model: "gpt-3.5-turbo",
-//       messages: [
-//         {
-//           role: "system", 
-//           content: "You are a quiz generator. Create 5 multiple-choice questions across different topics."
-//         },
-//         {
-//           role: "user",
-//           content: `Generate 5 multiple-choice questions. For each question, provide:
-//           - A clear, interesting question
-//           - 4 answer options
-//           - The correct answer
-          
-//           Respond in this exact JSON format:
-//           [
-//             {
-//               "question": "...",
-//               "options": ["option1", "option2", "option3", "option4"],
-//               "correctAnswer": "correct option"
-//             }
-//           ]`
-//         }
-//       ],
-//       response_format: { type: "json_object" }
-//     });
-
-//     // Parse the generated quiz
-//     const quizContent = response.choices[0].message.content;
-//     const questions = JSON.parse(quizContent);
-
-//     res.json({ questions });
-//   } catch (error) {
-//     console.error('Quiz generation error:', error);
-//     res.status(500).json({ error: 'Quiz generation failed' });
-//   }
-// });
-
-// // Answer Verification Endpoint
-// app.post('/api/verify-answer', async (req, res) => {
-//   const { question, selectedAnswer, correctAnswer } = req.body;
-
-//   try {
-//     const response = await openai.chat.completions.create({
-//       model: "gpt-3.5-turbo",
-//       messages: [
-//         {
-//           role: "system",
-//           content: "You are an answer verification assistant."
-//         },
-//         {
-//           role: "user",
-//           content: `Evaluate the following multiple-choice question:
-//           Question: ${question}
-//           Correct Answer: ${correctAnswer}
-//           Selected Answer: ${selectedAnswer}
-
-//           Carefully analyze if the selected answer matches the correct answer.
-//           Respond with ONLY "true" if the selected answer is exactly the same as the correct answer, or "false" otherwise.
-//           Be precise and case-sensitive.
-//           Do not add any additional explanation or text.`
-//         }
-//       ]
-//     });
-
-//     // Extract the verification result
-//     const responseText = response.choices[0].message.content.trim().toLowerCase();
-//     const isCorrect = responseText === 'true';
-
-//     res.json({ 
-//       isCorrect,
-//       correctAnswer,
-//       selectedAnswer
-//     });
-//   } catch (error) {
-//     console.error('Answer verification error:', error);
-//     res.status(500).json({ error: 'Answer verification failed' });
-//   }
-// });
+app.get('/api/leetcode-stats', async (req, res) => {
+  try {
+    const username = req.query.username;
+    
+    if (!username) {
+      return res.status(400).json({ error: 'Username is required' });
+    }
+    
+    const query = `
+      query userProfileCalendar($username: String!, $year: Int) {
+        matchedUser(username: $username) {
+          userCalendar(year: $year) {
+            activeYears
+            streak
+            totalActiveDays
+            dccBadges {
+              timestamp
+              badge {
+                name
+                icon
+              }
+            }
+            submissionCalendar
+          }
+        }
+      }
+    `;
+    
+    const response = await axios.post('https://leetcode.com/graphql/', {
+      query,
+      variables: {
+        username,
+        year: new Date().getFullYear()
+      }
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Referer': 'https://leetcode.com/',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      }
+    });
+    
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching LeetCode data:', error);
+    
+    if (error.response) {
+      // The request was made and the server responded with a status code outside the 2xx range
+      return res.status(error.response.status).json({ 
+        error: `LeetCode API error: ${error.response.status}`,
+        message: error.response.data
+      });
+    } else if (error.request) {
+      // The request was made but no response was received
+      return res.status(503).json({ error: 'No response from LeetCode API' });
+    } else {
+      // Something happened in setting up the request
+      return res.status(500).json({ error: 'Error setting up request to LeetCode API' });
+    }
+  }
+});
 
 
 app.use(express.static(path.join(__dirname, "frontend/dist")));

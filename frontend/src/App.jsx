@@ -13,6 +13,7 @@ import WEBRTC from './pages/WEBRTC/WEBRTC'
 import ProfileCompletion from './pages/ProfileCompletion/ProfileCompletion'
 import Algochallenge from './pages/AlgoChallenge/AlgoChallenge'
 import OCR from './pages/OCR/OCR'
+import Score from './pages/Score/Score'
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
         <Route path='/webrtc' element={<WEBRTC/>}/>
         <Route path='/algo-challenge' element={<Algochallenge/>}/>
         <Route path='/ocr' element={<OCR/>}/>
+        <Route path='/score' element={<Score/>}/>
         </Routes>
      </ThemeProvider>
     </div>
