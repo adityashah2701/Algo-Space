@@ -3,8 +3,10 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import {
   ProfileCompletionEmailTemplate,
+  WelcomeBackEmailTemplate,
   WelcomeEmailTemplate,
 } from "../templates/EmailTemplates.js";
+import { sendMail } from "../utils/sendMail.js";
 
 // 1. Basic User Registration
 export const userRegister = async (req, res) => {
@@ -39,14 +41,7 @@ export const userRegister = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" } // Short expiry for registration flow
     );
-    const info = await sendMail({
-      to: newUser.email,
-      subject: "Welcome To DEMO INC.",
-      html: WelcomeEmailTemplate(newUser),
-    });
-    if (!info.accepted.includes(newUser.email)) {
-      return res.status(400).json({ message: "Failed to send welcome email" });
-    }
+ 
 
     return res.status(201).json({
       success: true,

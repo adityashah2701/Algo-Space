@@ -13,14 +13,16 @@ import {
   getCandidateInterviews,
   cancelInterviewRequest,
 } from '../controllers/candidate.controller.js';
-// import { authMiddleware } from '../middleware/authMiddleware.js';
-// import { candidateMiddleware } from '../middleware/roleMiddleware.js';
+import { authMiddleware, candidateMiddleware } from '../middlewares/auth.middleware.js';
+
+
+
 
 const router = express.Router();
 
 // Apply middleware to all candidate routes
-// router.use(authMiddleware);
-// router.use(candidateMiddleware);
+router.use(authMiddleware);
+router.use(candidateMiddleware);
 
 // Profile routes
 router.get('/profile', getCandidateProfile);
