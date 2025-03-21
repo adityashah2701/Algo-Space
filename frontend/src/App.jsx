@@ -14,9 +14,9 @@ const App = () => {
       <Routes>
         <Route path='/login' element={<LoginPage/>}>
         </Route>
-        <Route path='/signup' element={<SignupPage/>}>
+        <Route path='/register' element={<SignupPage/>}>
         </Route>
-        <Route path='/role' element={<RoleSelectionForm/>}>
+        <Route path='/register/role' element={<RoleSelectionForm/>}>
         </Route>
         </Routes>
      </ThemeProvider>

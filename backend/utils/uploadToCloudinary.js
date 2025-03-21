@@ -1,11 +1,12 @@
-
+// utils/cloudinary.js
 import cloudinary from "../config/cloudinary.js";
 
 export const uploadToCloudinary = async (filePath, options = {}) => {
     try {
         const defaultOptions = {
             folder: "images",
-            resource: "auto"
+            resource: "auto",
+            chunk_size: 6000000 
         };
         
         const uploadOptions = { ...defaultOptions, ...options };
