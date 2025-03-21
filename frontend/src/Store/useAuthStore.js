@@ -3,7 +3,7 @@ import { axiosInstance } from '../lib/axios';
 import toast from "react-hot-toast";
 
 export const useAuthStore = create((set) => ({
-  user: JSON.parse(localStorage.getItem('user')) || null,
+  user: JSON.parse(localStorage.getItem('user') || 'null'),
   isLoading: false,
   isError: false,
   error: null,
@@ -45,6 +45,95 @@ export const useAuthStore = create((set) => ({
 
       toast.error(errorMessage);
       throw error;
+    }
+  },
+
+  // Login Function
+  login: async (data) => {
+    try {
+      set({ isLoading: true, isError: false, error: null });
+
+      const response = await axiosInstance.post('/auth/login', data);
+      
+      // Extract user and token from the response structure
+      const { user, token } = response.data.data;
+
+      // Store credentials
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      // Configure axios for future requests
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      set({ user, isLoading: false });
+
+      toast.success(`Welcome back, ${user.firstName}! 🚀`);
+
+      return user;
+    } catch (error) {
+      console.error('Login error:', error);
+      const errorMessage = error?.response?.data?.message || 'Login failed. Check your credentials.';
+
+      set({ isError: true, error: errorMessage, isLoading: false });
+
+      toast.error(errorMessage);
+      throw error;
+    }
+  },
+
+  // Logout Function
+  logout: async () => {
+    try {
+      set({ isLoading: true, isError: false, error: null });
+
+      // Configure headers with the token
+      const token = localStorage.getItem('token');
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      await axiosInstance.get('/auth/logout');
+
+      // Clear all auth data
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('tempToken');
+      localStorage.removeItem('profileToken');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('registrationStep');
+      localStorage.removeItem('selectedRole');
+      
+      // Remove auth header
+      delete axiosInstance.defaults.headers.common['Authorization'];
+
+      set({ 
+        user: null, 
+        isLoading: false,
+        registrationStep: 'initial',
+        tempUserId: null
+      });
+
+      toast.success('Logged out successfully. See you soon! 👋');
+    } catch (error) {
+      console.error('Logout error:', error);
+      
+      // Even if the server call fails, we should clear everything locally
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('tempToken');
+      localStorage.removeItem('profileToken');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('registrationStep');
+      localStorage.removeItem('selectedRole');
+      
+      delete axiosInstance.defaults.headers.common['Authorization'];
+      
+      set({ 
+        user: null, 
+        isLoading: false,
+        registrationStep: 'initial',
+        tempUserId: null
+      });
+
+      toast.success('Logged out successfully.');
     }
   },
 
@@ -129,95 +218,6 @@ export const useAuthStore = create((set) => ({
 
       toast.error(errorMessage);
       throw error;
-    }
-  },
-
-  // Login Function
-  login: async (data) => {
-    try {
-      set({ isLoading: true, isError: false, error: null });
-
-      const response = await axiosInstance.post('/auth/login', data);
-      
-      // Extract user and token
-      const { user, token } = response.data.data;
-
-      // Store credentials
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      
-      // Configure axios for future requests
-      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-      set({ user, isLoading: false });
-
-      toast.success(`Welcome back, ${user.firstName}! 🚀`);
-
-      return user;
-    } catch (error) {
-      console.error('Login error:', error);
-      const errorMessage = error?.response?.data?.message || 'Login failed. Check your credentials.';
-
-      set({ isError: true, error: errorMessage, isLoading: false });
-
-      toast.error(errorMessage);
-      throw error;
-    }
-  },
-
-  // Logout Function
-  logout: async () => {
-    try {
-      set({ isLoading: true, isError: false, error: null });
-
-      // Configure headers with the token
-      const token = localStorage.getItem('token');
-      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-      await axiosInstance.get('/auth/logout');
-
-      // Clear all auth data
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('tempToken');
-      localStorage.removeItem('profileToken');
-      localStorage.removeItem('userId');
-      localStorage.removeItem('registrationStep');
-      localStorage.removeItem('selectedRole');
-      
-      // Remove auth header
-      delete axiosInstance.defaults.headers.common['Authorization'];
-
-      set({ 
-        user: null, 
-        isLoading: false,
-        registrationStep: 'initial',
-        tempUserId: null
-      });
-
-      toast.success('Logged out successfully. See you soon! 👋');
-    } catch (error) {
-      console.error('Logout error:', error);
-      
-      // Even if the server call fails, we should clear everything locally
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('tempToken');
-      localStorage.removeItem('profileToken');
-      localStorage.removeItem('userId');
-      localStorage.removeItem('registrationStep');
-      localStorage.removeItem('selectedRole');
-      
-      delete axiosInstance.defaults.headers.common['Authorization'];
-      
-      set({ 
-        user: null, 
-        isLoading: false,
-        registrationStep: 'initial',
-        tempUserId: null
-      });
-
-      toast.success('Logged out successfully.');
     }
   },
   
