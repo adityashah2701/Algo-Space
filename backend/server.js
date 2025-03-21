@@ -9,7 +9,7 @@ import { connectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import path from "path"
-
+import cors from "cors"
 const app = express();
 const __dirname = path.resolve();
 app.use(express.json());
@@ -23,9 +23,17 @@ app.use(
     createParentPath: true,
   })
 );
+app.use(cors({
+  origin: process.env.NODE_ENV === "production" ? process.env.CLIENT_URL : ["http://localhost:5173", "*", ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}))
 app.use("/api/auth",authRoutes);
 app.use("/api/candidate",candidateRoutes);
 app.use("/api/interviewer",interviewrRoutes);
+
+app.use(express.static(path.join(__dirname, "frontend/dist")));
 
 
 app.listen(PORT, () => {
