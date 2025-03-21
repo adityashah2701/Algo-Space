@@ -4,7 +4,8 @@ import { Search, Briefcase, Code, BookOpen, Building, Sun, Moon, X, Menu } from 
 import { Button } from "../../components/ui/button";
 import { cn } from "../../lib/utils";
 import { useTheme } from "../../context/ThemeProvider";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/Store/useAuthStore";
+import LanguageSelector from "@/pages/LanguageSelector";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,10 +14,8 @@ function Header() {
   const user = JSON.parse(localStorage.getItem('user'));
   const navigation = [
     { name: "FIND JOBS", href: "/jobs", icon: <Search className="h-4 w-4 mr-2" /> },
-    // { name: "MY APPLICATIONS", href: "/applications", icon: <Briefcase className="h-4 w-4 mr-2" /> },
     { name: "ALGORITHM CHALLENGES", href: "/algo-challenge", icon: <Code className="h-4 w-4 mr-2" /> },
     { name: "LEARNING RESOURCES", href: "/resources", icon: <BookOpen className="h-4 w-4 mr-2" /> },
-    { name: "COMPANIES", href: "/companies", icon: <Building className="h-4 w-4 mr-2" /> }
   ];
 
   // Close mobile menu when route changes
@@ -39,6 +38,11 @@ function Header() {
 
         {/* Mobile Menu Toggle */}
         <div className="flex items-center md:hidden">
+          {/* LanguageSelector for Mobile */}
+          <div className="mr-2 flex items-center">
+            <LanguageSelector className="block h-8 w-20 text-xs" />
+          </div>
+
           {/* Theme Toggle for Mobile */}
           <button 
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")} 
@@ -122,6 +126,9 @@ function Header() {
 
         {/* Desktop Right Side buttons */}
         <div className="hidden md:flex items-center gap-4">
+          {/* LanguageSelector for Desktop */}
+          <LanguageSelector className="block h-8 w-24 border border-gray-300 dark:border-gray-700 rounded-md" />
+          
           <button 
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")} 
             className="p-2 rounded-md text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 transition"
