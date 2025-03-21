@@ -14,8 +14,14 @@ import HomePage from "./pages/Home/HomePage";
 
 import WEBRTC from './pages/WEBRTC/WEBRTC'
 import ProfileCompletion from './pages/ProfileCompletion/ProfileCompletion'
+
+import Algochallenge from './pages/AlgoChallenge/AlgoChallenge'
+import OCR from './pages/OCR/OCR'
+
+import Score from './pages/Score/Score'
 import { useAuthStore } from "./store/useAuthStore";
 import { axiosInstance } from "./lib/axios";
+
 
 const App = () => {
   const { setUser } = useAuthStore();
@@ -45,15 +51,21 @@ const App = () => {
     
         <Route path='/interviewer-dashboard' element={<InterviewerDashboard/>}/>
 
-        {/* <Route path='/quiz' element={<QuizPage/>}/> */}
+       
       
         <Route path='/login' element={<LoginPage/>}/>
         <Route path='/register' element={<SignupPage/>}/>
     
         <Route path='/complete-profile' element={<ProfileCompletion/>}/>
         <Route path='/webrtc' element={<WEBRTC/>}/>
+
+        <Route path='/algo-challenge' element={<Algochallenge/>}/>
+        <Route path='/ocr' element={<OCR/>}/>
+        <Route path='/score' element={<Score/>}/>
+
         
        
+
         </Routes>
       </ThemeProvider>
     </div>
