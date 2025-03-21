@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useTheme } from '@/context/ThemeProvider';
-import { useAuthStore } from '@/Store/useAuthStore';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Moon, Sun, Laptop, Loader2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useAuthStore } from '@/store/useAuthStore';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
-  const { login, isLoading, isError, error } = useAuthStore();
+  const { login, isLoading, error, isError } = useAuthStore();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,14 +28,11 @@ const LoginPage = () => {
         password,
         rememberMe
       };
-      
-      const user = await login(loginData);
-      
-      // If login is successful, navigate to dashboard
-      navigate('/dashboard');
+      const res = await login(loginData);
+      if(res.user){
+        navigate('/dashboard');
+      }
     } catch (err) {
-      // Error handling is done in the useAuthStore, 
-      // so we don't need to do anything additional here
       console.error('Login failed', err);
     }
   };
@@ -217,7 +214,7 @@ const LoginPage = () => {
         </div>
         <div className="max-w-lg z-10 p-8 rounded-full">
           <div className="text-center">
-           <img src="/logo.png" alt="" />
+           <img src="/logo.png" alt="Logo" />
           </div>
         </div>
       </div>
