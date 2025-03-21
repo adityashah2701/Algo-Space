@@ -2,7 +2,10 @@ import { axiosInstance } from "@/lib/axios";
 import { create } from "zustand";
 
 export const useAuthStore = create((set) => ({
-  user: null,
+  user: localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))
+    : null,
+  setUser: (user) => set({ user }),
   isLoading: false,
   isError: false,
   error: null,

@@ -10,16 +10,18 @@ import { PlatformStats } from '@/components/skills/PlatformSkills';
 import { SkillsProgress } from '@/components/skills/SkillProgress';
 import React, { useState } from 'react';
 import { useTheme } from '@/context/ThemeProvider';
+import { useAuthStore } from '@/store/useAuthStore';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [activeTab, setActiveTab] = useState('profile');
 const { theme, setTheme } = useTheme();
+  const {user} = useAuthStore();
   
   // Mock data - In a real app, this would come from your backend
   const [profile, setProfile] = useState({
-    name: 'Alex Johnson',
-    email: 'alex.johnson@example.com',
+    name: (user.firstName + user.lastName),
+    email: user.email,
     gender: 'Male',
     profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
     skills: ['JavaScript', 'React', 'Node.js', 'TypeScript', 'Python'],

@@ -4,12 +4,13 @@ import { Search, Briefcase, Code, BookOpen, Building, Sun, Moon, X, Menu } from 
 import { Button } from "../../components/ui/button";
 import { cn } from "../../lib/utils";
 import { useTheme } from "../../context/ThemeProvider";
+import { useAuthStore } from "@/store/useAuthStore";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { theme, setTheme } = useTheme();
-
+  const { user } = useAuthStore();
   const navigation = [
     { name: "FIND JOBS", href: "/jobs", icon: <Search className="h-4 w-4 mr-2" /> },
     // { name: "MY APPLICATIONS", href: "/applications", icon: <Briefcase className="h-4 w-4 mr-2" /> },
@@ -75,16 +76,26 @@ function Header() {
                 </NavLink>
               ))}
               <div className="flex flex-col p-4 space-y-2">
-                <Link to="/login" className="w-full">
-                  <Button variant="outline" className="w-full border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800">
-                    Log in
-                  </Button>
-                </Link>
-                <Link to="/signup" className="w-full">
-                  <Button className="w-full bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 dark:hover:bg-gray-700 text-white">
-                    Sign Up
-                  </Button>
-                </Link>
+                {user ? (
+                  <Link to="/profile" className="w-full">
+                    <Button variant="outline" className="w-full border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800">
+                      Profile
+                    </Button>
+                  </Link>
+                ) : (
+                  <>
+                    <Link to="/login" className="w-full">
+                      <Button variant="outline" className="w-full border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800">
+                        Log in
+                      </Button>
+                    </Link>
+                    <Link to="/register" className="w-full">
+                      <Button className="w-full bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 dark:hover:bg-gray-700 text-white">
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </nav>
           </div>
@@ -117,16 +128,26 @@ function Header() {
           >
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
-          <Link to="/login">
-            <Button variant="outline" size="sm" className="border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800">
-              Log in
-            </Button>
-          </Link>
-          <Link to="/register">
-            <Button size="sm" className="bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 dark:hover:bg-gray-700 text-white">
-              Sign Up
-            </Button>
-          </Link>
+          {user ? (
+            <Link to={user.role === "interviewer" ? "/interviewer-dashboard" : "/candidate-dashboard"}>
+              <Button variant="outline" size="sm" className="border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800">
+                Dashboard
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Link to="/login">
+                <Button variant="outline" size="sm" className="border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800">
+                  Log in
+                </Button>
+              </Link>
+              <Link to="/register">
+                <Button size="sm" className="bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 dark:hover:bg-gray-700 text-white">
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

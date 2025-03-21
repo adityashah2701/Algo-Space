@@ -30,7 +30,10 @@ const LoginPage = () => {
       };
       const res = await login(loginData);
       if(res.user){
-        navigate('/dashboard');
+        if(res.user.role === "candidate"){navigate('/candidate-dashboard');}else{
+          navigate('/interviewer-dashboard');
+        }
+        
       }
     } catch (err) {
       console.error('Login failed', err);

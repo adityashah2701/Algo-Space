@@ -12,7 +12,7 @@ import fileUpload from "express-fileupload";
 import path from "path"
 // import { OpenAI } from "openai";
 import multer from "multer";
-
+import jobRoutes from "./routes/job.routes.js";
 import cors from "cors"
 const app = express();
 const __dirname = path.resolve();
@@ -37,6 +37,7 @@ app.use(cors({
 app.use("/api/auth",authRoutes);
 app.use("/api/candidate",candidateRoutes);
 app.use("/api/interviewer",interviewrRoutes);
+app.use("/api/job",jobRoutes)
 
 
 app.get('/api/leetcode-stats', async (req, res) => {
