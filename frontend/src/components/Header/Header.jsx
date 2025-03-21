@@ -122,7 +122,7 @@ function Header() {
               Log in
             </Button>
           </Link>
-          <Link to="/signup">
+          <Link to="/register">
             <Button size="sm" className="bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 dark:hover:bg-gray-700 text-white">
               Sign Up
             </Button>
