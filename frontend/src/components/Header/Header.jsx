@@ -10,7 +10,7 @@ function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { theme, setTheme } = useTheme();
-  const { user } = useAuthStore();
+  const user = JSON.parse(localStorage.getItem('user'));
   const navigation = [
     { name: "FIND JOBS", href: "/jobs", icon: <Search className="h-4 w-4 mr-2" /> },
     // { name: "MY APPLICATIONS", href: "/applications", icon: <Briefcase className="h-4 w-4 mr-2" /> },
@@ -77,9 +77,9 @@ function Header() {
               ))}
               <div className="flex flex-col p-4 space-y-2">
                 {user ? (
-                  <Link to="/profile" className="w-full">
+                  <Link to={user.role === "interviewer" ? "/interviewer-dashboard" : "/candidate-dashboard"} className="w-full">
                     <Button variant="outline" className="w-full border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800">
-                      Profile
+                      DashBoard
                     </Button>
                   </Link>
                 ) : (

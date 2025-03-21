@@ -3,12 +3,12 @@ import {createJob, getAllJobs, getJobBYInterviewer } from "../controllers/job.co
 import { authMiddleware, interviewerMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = Router();
-router.use(authMiddleware,interviewerMiddleware)
 
 
-router.post("/create-job",createJob)
-router.get("/get-jobs",getJobBYInterviewer)
-router.get("/get-all-jobs" ,getAllJobs)
+
+router.post("/create-job",authMiddleware,interviewerMiddleware,createJob)
+router.get("/get-jobs",authMiddleware,interviewerMiddleware,getJobBYInterviewer)
+router.get("/get-all-jobs",authMiddleware ,getAllJobs)
 
 
 export default router;

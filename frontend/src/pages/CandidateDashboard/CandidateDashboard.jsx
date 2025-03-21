@@ -16,22 +16,23 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [activeTab, setActiveTab] = useState('profile');
 const { theme, setTheme } = useTheme();
-  const {user} = useAuthStore();
+  const user = JSON.parse(localStorage.getItem('user'));
   
   // Mock data - In a real app, this would come from your backend
+
   const [profile, setProfile] = useState({
-    name: (user.firstName + user.lastName),
-    email: user.email,
-    gender: 'Male',
-    profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    skills: ['JavaScript', 'React', 'Node.js', 'TypeScript', 'Python'],
-    experience: '5',
-    resumeUrl: 'https://example.com/resume.pdf',
-    githubUsername: 'alexj',
-    leetcodeUsername: 'alex_codes',
-    codeforcesUsername: 'alex_algo',
-    codechefUsername: 'alex_chef',
-    preferredRoles: ['Full Stack Developer', 'Frontend Engineer']
+    name: `${user?.firstName} ${user?.lastName}`,
+    email: user?.email,
+    gender: user?.gender,
+    profileImage: user?.profilePicture || "./default.jpeg",
+    skills: user?.candidateProfile?.skills || [],
+    experience: user?.experience,
+    resumeUrl: '',
+    githubUsername: user?.candidateProfile?.githubUsername,
+    leetcodeUsername: user?.candidateProfile?.leetcodeUsername,
+    codeforcesUsername: user?.candidateProfile?.codeforcesUsername,
+    codechefUsername: user?.candidateProfile?.codechefUsername,
+    preferredRoles: user?.candidateProfile?.preferredRoles || []
   });
 
   const [interviews, setInterviews] = useState({

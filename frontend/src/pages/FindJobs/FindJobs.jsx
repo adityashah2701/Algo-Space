@@ -395,7 +395,19 @@ const FindJobs = () => {
 };
 
 // Company job card component
-const CompanyJobCard = ({ job }) => {
+const CompanyJobCard =   ({ job }) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const handleApply = async () => {
+        try {
+            const res =  await axiosInstance.put("/candidate/apply" ,{jobId : job._id})
+            toast.success(res.data.message)
+            console.log(res.data)
+            
+        } catch (error) {
+            console.error('Error applying for job:', error);
+            toast('Already Enrolled for this job !');
+        }
+    }
   return (
     <Card className="overflow-hidden hover:shadow-md transition-shadow">
       <CardHeader className="p-4">
@@ -423,8 +435,8 @@ const CompanyJobCard = ({ job }) => {
           </div>
           
           <div className="flex justify-end">
-            <Button>
-              Apply Now
+            <Button onClick={handleApply}>
+              {job.candidateApplied && job.candidateApplied.candidateId === user._id ? "Applied" : "Apply"}
             </Button>
           </div>
         </div>

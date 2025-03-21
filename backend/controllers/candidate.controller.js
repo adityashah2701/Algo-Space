@@ -393,9 +393,9 @@ export const applyToJob = async (req, res) => {
     if (job.status === "closed") return res.status(400).json({ message: "Job is closed" });
     
     // Check if candidate has already applied using proper array method
-    const alreadyApplied = job.candidateApplied.some(
+;    const alreadyApplied = job.candidateApplied.some(
       application => application.candidateId.toString() === req.candidate._id.toString()
-    );
+    )
     
     if (alreadyApplied) {
       return res.status(400).json({ message: "You have already applied to this job" });
@@ -405,7 +405,7 @@ export const applyToJob = async (req, res) => {
     job.candidateApplied.push({ candidateId: req.candidate._id });
     await job.save();
     
-    return res.status(200).json({ message: "Job applied successfully" });
+    return res.status(200).json({ message: "Job applied successfully", job });
   } catch (error) {
     console.error("Error in applying to job:", error);
     return res.status(500).json({ message: "Server error" });
