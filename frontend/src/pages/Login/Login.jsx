@@ -1,23 +1,40 @@
 import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useTheme } from '@/context/ThemeProvider';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Moon, Sun, Laptop } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Moon, Sun, Laptop, Loader2 } from 'lucide-react';
+import { useAuthStore } from '@/store/useAuthStore';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
+  const { login, isLoading, error, isError } = useAuthStore();
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt with:', { email, password, rememberMe });
-    // Add authentication logic here
+    
+    try {
+      const loginData = {
+        email,
+        password,
+        rememberMe
+      };
+      const res = await login(loginData);
+      if(res.user){
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      console.error('Login failed', err);
+    }
   };
 
   return (
@@ -69,6 +86,13 @@ const LoginPage = () => {
             <CardContent>
               <form onSubmit={handleSubmit}>
                 <div className="grid gap-4">
+                  {/* Error Message */}
+                  {isError && (
+                    <div className="bg-destructive/10 text-destructive p-3 rounded-lg text-sm text-center">
+                      {error || 'An error occurred during login'}
+                    </div>
+                  )}
+
                   <div className="grid gap-2">
                     <Label htmlFor="email">Email</Label>
                     <Input
@@ -78,6 +102,7 @@ const LoginPage = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
+                      disabled={isLoading}
                     />
                   </div>
                   <div className="grid gap-2">
@@ -97,6 +122,7 @@ const LoginPage = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
+                      disabled={isLoading}
                     />
                   </div>
                   <div className="flex items-center space-x-2">
@@ -104,6 +130,7 @@ const LoginPage = () => {
                       id="remember" 
                       checked={rememberMe} 
                       onCheckedChange={(checked) => setRememberMe(checked)}
+                      disabled={isLoading}
                     />
                     <Label 
                       htmlFor="remember" 
@@ -112,8 +139,19 @@ const LoginPage = () => {
                       Remember me for 30 days
                     </Label>
                   </div>
-                  <Button type="submit" className="w-full">
-                    Sign In
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Signing In...
+                      </>
+                    ) : (
+                      'Sign In'
+                    )}
                   </Button>
                 </div>
               </form>
@@ -128,7 +166,7 @@ const LoginPage = () => {
                   </span>
                 </div>
               </div>
-                        {/* Right Side - decorative */}
+
               <div className="grid grid-cols-3 gap-3">
                 <Button variant="outline" className="h-10">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -174,15 +212,12 @@ const LoginPage = () => {
             />
           ))}
         </div>
-        <div className="max-w-lg z-10   p-8 rounded-full ">
+        <div className="max-w-lg z-10 p-8 rounded-full">
           <div className="text-center">
-           <img src="/logo.png" alt="" />
+           <img src="/logo.png" alt="Logo" />
           </div>
         </div>
       </div>
-      
-
-     
     </div>
   );
 };

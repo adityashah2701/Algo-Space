@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from './components/ui/button'
+
 import { ThemeProvider } from './context/ThemeProvider'
 import { Route, Routes } from 'react-router-dom'
 import LoginPage from './pages/Login/Login'
@@ -13,6 +13,9 @@ import HomePage from './pages/Home/HomePage'
 
 
 
+import WEBRTC from './pages/WEBRTC/WEBRTC'
+import ProfileCompletion from './pages/ProfileCompletion/ProfileCompletion'
+
 const App = () => {
   return (
     <div>
@@ -20,9 +23,7 @@ const App = () => {
     <Header/>
       <Routes>
         <Route path='/' element={<HomePage/>}/>
-        <Route path='/login' element={<LoginPage/>}/>
- 
-        <Route path='/signup' element={<SignupPage/>}/>
+        
       
         <Route path='/role' element={<RoleSelectionForm/>}/>
   
@@ -32,6 +33,13 @@ const App = () => {
 
         {/* <Route path='/quiz' element={<QuizPage/>}/> */}
       
+        <Route path='/login' element={<LoginPage/>}/>
+        <Route path='/register' element={<SignupPage/>}/>
+    
+        <Route path='/complete-profile' element={<ProfileCompletion/>}/>
+        <Route path='/webrtc' element={<WEBRTC/>}/>
+        
+       
         </Routes>
      </ThemeProvider>
     </div>

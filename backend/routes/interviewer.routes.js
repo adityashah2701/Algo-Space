@@ -21,15 +21,15 @@ import {
   searchCandidates,
   getCandidateProfile,
   getCandidateFeedbackHistory
-} from '../controllers/interviewerController.js';
-// import { authMiddleware } from '../middleware/authMiddleware.js';
-// import { interviewerMiddleware } from '../middleware/roleMiddleware.js';
+} from '../controllers/interviewer.controller.js';
+import { authMiddleware ,interviewerMiddleware} from '../middlewares/auth.middleware.js';
+
 
 const router = express.Router();
 
 // Apply middleware to all interviewer routes
-// router.use(authMiddleware);
-// router.use(interviewerMiddleware);
+router.use(authMiddleware);
+router.use(interviewerMiddleware);
 
 // Profile Management Routes
 router.get('/profile', getInterviewerProfile);
