@@ -11,6 +11,8 @@ import HomePage from './pages/Home/HomePage'
 // import QuizPage from './pages/QuizApp/QuizApp'
 import WEBRTC from './pages/WEBRTC/WEBRTC'
 import ProfileCompletion from './pages/ProfileCompletion/ProfileCompletion'
+import Algochallenge from './pages/AlgoChallenge/AlgoChallenge'
+import OCR from './pages/OCR/OCR'
 
 const App = () => {
   return (
@@ -26,6 +28,8 @@ const App = () => {
         <Route path='/register' element={<SignupPage/>}/>
         <Route path='/complete-profile' element={<ProfileCompletion/>}/>
         <Route path='/webrtc' element={<WEBRTC/>}/>
+        <Route path='/algo-challenge' element={<Algochallenge/>}/>
+        <Route path='/ocr' element={<OCR/>}/>
         </Routes>
      </ThemeProvider>
     </div>
