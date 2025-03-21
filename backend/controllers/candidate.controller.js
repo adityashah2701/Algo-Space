@@ -2,11 +2,6 @@ import User from '../models/userModel.js';
 import Interview from '../models/interviewModel.js';
 import { uploadToCloud, deleteFromCloud } from '../utils/cloudStorage.js'; // Assuming cloud storage for resume
 
-/**
- * Get candidate profile information
- * @route GET /api/candidate/profile
- * @access Private (Candidate only)
- */
 export const getCandidateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
