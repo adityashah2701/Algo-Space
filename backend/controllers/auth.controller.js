@@ -41,7 +41,11 @@ export const userRegister = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" } // Short expiry for registration flow
     );
-
+    res.cookie("token", tempToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
 
     return res.status(201).json({
       success: true,
@@ -239,6 +243,11 @@ export const userLogin = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "30d" }
     );
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
 
     const info = await sendMail({
       to: user.email,
