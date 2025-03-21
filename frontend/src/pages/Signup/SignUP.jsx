@@ -74,7 +74,7 @@ const SignupPage = () => {
       const result = await signup(userData);
       
       // Navigate to role selection page with userId
-      navigate(`/register/role?userId=${result.userId}`);
+      navigate(`/register/role?userId=${result.user._id}`);
     } catch (error) {
       // Error handling is done within the auth store
       console.error('Registration failed:', error);

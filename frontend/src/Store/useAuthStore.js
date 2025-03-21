@@ -10,7 +10,7 @@ export const useAuthStore = create((set) => ({
   
   // For tracking registration progress
   registrationStep: localStorage.getItem('registrationStep') || 'initial',
-  tempUserId: localStorage.getItem('userId') || null,
+
 
   // Signup Function - Step 1: Basic Registration
   signup: async (data) => {
@@ -20,23 +20,22 @@ export const useAuthStore = create((set) => ({
       const response = await axiosInstance.post('/auth/register', data);
       
       // Extract the response data
-      const { userId, tempToken } = response.data.data;
+      const { user, tempToken } = response.data.data;
       
       // Store temporary data for the next step
       localStorage.setItem('tempToken', tempToken);
-      localStorage.setItem('userId', userId);
+      localStorage.setItem('user',JSON.stringify(user));
       localStorage.setItem('registrationStep', 'roleSelection');
       
       // Update store
       set({ 
         isLoading: false, 
         registrationStep: 'roleSelection',
-        tempUserId: userId 
       });
 
       toast.success('Registration successful! Please select your role.');
 
-      return { userId, tempToken };
+      return { user, tempToken };
     } catch (error) {
       console.error('Signup error:', error);
       const errorMessage = error?.response?.data?.message || 'Registration failed. Please try again.';
@@ -59,7 +58,7 @@ export const useAuthStore = create((set) => ({
       const { user, token } = response.data.data;
 
       // Store credentials
-      localStorage.setItem('token', token);
+      localStorage.setItem('tempToken', token);
       localStorage.setItem('user', JSON.stringify(user));
       
       // Configure axios for future requests
@@ -142,9 +141,8 @@ export const useAuthStore = create((set) => ({
     try {
       set({ isLoading: true, isError: false, error: null });
 
-      // Configure headers with the temp token
-      const tempToken = localStorage.getItem('tempToken');
-      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${tempToken}`;
+  
+    
 
       const response = await axiosInstance.post('/auth/register/role', data);
       

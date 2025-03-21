@@ -52,7 +52,7 @@ export const userRegister = async (req, res) => {
       success: true,
       message: "Basic registration successful. Please select a role.",
       data: {
-        userId: newUser._id,
+        user: newUser,
         tempToken,
       },
     });
