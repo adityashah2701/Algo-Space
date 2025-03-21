@@ -8,6 +8,7 @@ import { connectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import path from "path"
+import multer from "multer";
 
 const app = express();
 const __dirname = path.resolve();
@@ -22,9 +23,23 @@ app.use(
     createParentPath: true,
   })
 );
+app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/auth",authRoutes);
 app.use("/api/candidate",candidateRoutes);
 
+
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ message: 'File size exceeds 5MB limit' });
+    }
+    return res.status(400).json({ message: `Multer error: ${err.message}` });
+  } else if (err) {
+    console.error(err);
+    return res.status(500).json({ message: err.message || 'Internal server error' });
+  }
+  next();
+});
 
 app.listen(PORT, () => {
   connectDB();

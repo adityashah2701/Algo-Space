@@ -69,14 +69,33 @@ export const uploadResume = async (req, res) => {
     
     const resumeFile = req.files.resume;
     
+    // Log file information for debugging
+    console.log("Uploaded file info:", {
+      name: resumeFile.name,
+      size: resumeFile.size,
+      mimetype: resumeFile.mimetype
+    });
+    
     // Create temporary file path from buffer
     const tempFilePath = resumeFile.tempFilePath;
     
-    // Upload to Cloudinary
-    const resumeUrl = await uploadToCloudinary(tempFilePath, {
+    // Set upload options based on file type
+    let uploadOptions = {
       folder: 'resumes',
       public_id: `resume_${userId}_${Date.now()}`
-    });
+    };
+    
+    // Handle PDFs specifically
+    if (resumeFile.mimetype === 'application/pdf') {
+      // For PDFs, use raw upload to preserve the file exactly as is
+      uploadOptions.resource_type = "raw";
+    } else {
+      // For other file types (images, etc.), use auto detection
+      uploadOptions.resource_type = "auto";
+    }
+    
+    // Upload to Cloudinary with appropriate options
+    const resumeUrl = await uploadToCloudinary(tempFilePath, uploadOptions);
     
     // Update user profile with resume URL
     const updatedUser = await User.findByIdAndUpdate(

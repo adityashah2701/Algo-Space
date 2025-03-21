@@ -14,6 +14,7 @@ import {
   cancelInterviewRequest,
 } from '../controllers/candidate.controller.js';
 import { authMiddleware, candidateMiddleware } from '../middlewares/auth.middleware.js';
+import upload from '../config/multer.js';
 
 
 
@@ -29,7 +30,7 @@ router.get('/profile', getCandidateProfile);
 router.put('/profile', updateCandidateProfile);
 
 // Resume routes
-router.post('/resume', uploadResume);
+router.post('/resume', upload.single('resume'), uploadResume);
 router.delete('/resume', deleteResume);
 
 // Skills and roles routes

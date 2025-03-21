@@ -7,6 +7,7 @@ import {
   WelcomeEmailTemplate,
 } from "../templates/EmailTemplates.js";
 import { sendMail } from "../utils/sendMail.js";
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 
 // 1. Basic User Registration
 export const userRegister = async (req, res) => {
@@ -68,7 +69,10 @@ export const userRegister = async (req, res) => {
 // 2. Role Selection
 export const selectUserRole = async (req, res) => {
   try {
-    const { userId, role, profilePicture } = req.body;
+    const userId = req.user.id;
+    const { role } = req.body;
+    const { profilePicture } = req.files;
+    let profilepicurl;
 
     // Validate role
     if (!role || !["candidate", "interviewer"].includes(role)) {
@@ -78,10 +82,15 @@ export const selectUserRole = async (req, res) => {
       });
     }
 
-    // Update user with role
+    // Upload profile picture if provided
+    if (profilePicture) {
+      profilepicurl = await uploadToCloudinary(profilePicture.tempFilePath);
+    }
+
+    // Update user with role and profile picture
     const user = await User.findByIdAndUpdate(
       userId,
-      { role, profilePicture },
+      { role, profilePicture: profilepicurl },
       { new: true }
     );
 
