@@ -14,6 +14,8 @@ import HomePage from "./pages/Home/HomePage";
 
 import WEBRTC from './pages/WEBRTC/WEBRTC'
 import ProfileCompletion from './pages/ProfileCompletion/ProfileCompletion'
+import { useAuthStore } from "./store/useAuthStore";
+import { axiosInstance } from "./lib/axios";
 
 const App = () => {
   const { setUser } = useAuthStore();
@@ -39,9 +41,9 @@ const App = () => {
         
       
   
-        <Route path='/candidate-dash' element={<CandidateDashboard/>}/>
+        <Route path='/candidate-dashboard' element={<CandidateDashboard/>}/>
     
-        <Route path='/interviewer-dash' element={<InterviewerDashboard/>}/>
+        <Route path='/interviewer-dashboard' element={<InterviewerDashboard/>}/>
 
         {/* <Route path='/quiz' element={<QuizPage/>}/> */}
       
