@@ -9,9 +9,6 @@ import InterviewerDashboard from './pages/InterviewerDashboard/InterviewerDashbo
 import Header from './components/Header/Header'
 import HomePage from './pages/Home/HomePage'
 // import QuizPage from './pages/QuizApp/QuizApp'
-
-
-
 import WEBRTC from './pages/WEBRTC/WEBRTC'
 import ProfileCompletion from './pages/ProfileCompletion/ProfileCompletion'
 
@@ -22,22 +19,13 @@ const App = () => {
     <Header/>
       <Routes>
         <Route path='/' element={<HomePage/>}/>
-        
-      
-  
         <Route path='/candidate-dash' element={<CandidateDashboard/>}/>
-    
         <Route path='/interviewer-dash' element={<InterviewerDashboard/>}/>
-
         {/* <Route path='/quiz' element={<QuizPage/>}/> */}
-      
         <Route path='/login' element={<LoginPage/>}/>
         <Route path='/register' element={<SignupPage/>}/>
-    
         <Route path='/complete-profile' element={<ProfileCompletion/>}/>
         <Route path='/webrtc' element={<WEBRTC/>}/>
-        
-       
         </Routes>
      </ThemeProvider>
     </div>
