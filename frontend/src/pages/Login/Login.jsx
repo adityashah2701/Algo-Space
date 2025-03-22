@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Moon, Sun, Laptop, Loader2 } from 'lucide-react';
-import { useAuthStore } from '@/Store/useAuthStore';
+import { useAuthStore } from '@/Store/useAuthStore'
 
 const LoginPage = () => {
   const navigate = useNavigate();

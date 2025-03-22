@@ -10,7 +10,7 @@ import { PlusCircle, Trash2, Building, Briefcase, AlertCircle } from 'lucide-rea
 import { axiosInstance } from '@/lib/axios';
 
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/Store/useAuthStore';
+
 
 const JobPostingPage = () => {
   const [loading, setLoading] = useState(false);
