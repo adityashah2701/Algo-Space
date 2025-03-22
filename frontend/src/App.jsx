@@ -23,6 +23,7 @@ import { useAuthStore } from "./Store/useAuthStore";
 import { axiosInstance } from "./lib/axios";
 import FindJobs from "./pages/FindJobs/FindJobs";
 import { Toaster } from "react-hot-toast";
+import JobPostingPage from "./pages/JobForm/JobForm";
 
 
 
@@ -61,7 +62,7 @@ const App = () => {
     
         <Route path='/complete-profile' element={<ProfileCompletion/>}/>
         <Route path='/webrtc' element={<WEBRTC/>}/>
-
+<Route path="/create-job" element={<JobPostingPage/>}/>
         <Route path='/algo-challenge' element={<Algochallenge/>}/>
         <Route path='/ocr' element={<OCR/>}/>
         <Route path='/score' element={<Score/>}/>
