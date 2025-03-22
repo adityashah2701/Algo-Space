@@ -57,60 +57,34 @@ const App = () => {
   
   return (
     <div>
-      <ThemeProvider defaultTheme='dark'>
-        <Header />
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path='/' element={<HomePage />} />
-            <Route path='/candidate-dashboard' element={
-              <ProtectedRoute>
-                <CandidateDashboard />
-              </ProtectedRoute>
-            } />
-            <Route path='/interviewer-dashboard' element={
-              <ProtectedRoute>
-                <InterviewerDashboard />
-              </ProtectedRoute>
-            } />
-            <Route path='/login' element={<LoginPage />} />
-            <Route path='/register' element={<SignupPage />} />
-            <Route path='/complete-profile' element={
-              <ProtectedRoute>
-                <ProfileCompletion />
-              </ProtectedRoute>
-            } />
-            <Route path='/webrtc' element={
-              <ProtectedRoute>
-                <WEBRTC />
-              </ProtectedRoute>
-            } />
-            <Route path='/create-job' element={
-              <ProtectedRoute>
-                <JobPostingPage />
-              </ProtectedRoute>
-            } />
-            <Route path='/algo-challenge' element={
-              <ProtectedRoute>
-                <Algochallenge />
-              </ProtectedRoute>
-            } />
-            <Route path='/ocr' element={
-              <ProtectedRoute>
-                <OCR />
-              </ProtectedRoute>
-            } />
-            <Route path='/score' element={
-              <ProtectedRoute>
-                <Score />
-              </ProtectedRoute>
-            } />
-            <Route path='/jobs' element={
-              <ProtectedRoute>
-                <FindJobs />
-              </ProtectedRoute>
-            } />
-          </Routes>
-        </Suspense>
+     <ThemeProvider defaultTheme='dark'>
+    <Header/>
+      <Routes>
+        <Route path='/' element={<HomePage/>}/>
+        
+      
+  
+        <Route path='/candidate-dashboard' element={<ProtectedRoute><CandidateDashboard/></ProtectedRoute>}/>
+    
+        <Route path='/interviewer-dashboard' element={<ProtectedRoute><InterviewerDashboard/></ProtectedRoute>}/>
+
+       
+      
+        <Route path='/login' element={<LoginPage/>}/>
+        <Route path='/register' element={<SignupPage/>}/>
+    
+        <Route path='/complete-profile' element={<ProtectedRoute><ProfileCompletion/></ProtectedRoute>}/>
+        <Route path='/webrtc' element={<ProtectedRoute><WEBRTC/></ProtectedRoute>}/>
+
+        <Route path='/algo-challenge' element={<ProtectedRoute><Algochallenge/></ProtectedRoute>}/>
+        <Route path='/ocr' element={<ProtectedRoute><OCR/></ProtectedRoute>}/>
+        <Route path='/score' element={<ProtectedRoute><Score/></ProtectedRoute>}/>
+        <Route path='/jobs' element={<ProtectedRoute><FindJobs/></ProtectedRoute>}/>
+
+        
+       
+
+        </Routes>
       </ThemeProvider>
       <Toaster />
     </div>
