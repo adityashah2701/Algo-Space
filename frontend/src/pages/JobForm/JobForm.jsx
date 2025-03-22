@@ -20,7 +20,7 @@ const JobPostingPage = () => {
   });
   const navigate = useNavigate()
   const [validationError, setValidationError] = useState('');
-  const { user } = useAuthStore();
+  const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
     const fetchData = () => {
