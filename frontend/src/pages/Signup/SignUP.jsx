@@ -23,7 +23,7 @@ import {
 import { Moon, Sun, Laptop, Eye, EyeOff, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/Store/useAuthStore";
 
 const SignupPage = () => {
   const navigate = useNavigate();

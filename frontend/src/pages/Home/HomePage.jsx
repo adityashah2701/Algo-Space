@@ -14,11 +14,12 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
   const [email, setEmail] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-
+  const navigate = useNavigate()
   const subscriptionPlans = [
     {
       name: "Basic",
@@ -152,6 +153,7 @@ const HomePage = () => {
                 />
               </div>
               <Button 
+              onClick={()=> navigate("/jobs")}
                 type="submit" 
                 className="bg-blue-600 text-white py-6 px-10 rounded-lg hover:bg-blue-700 transition justify-center flex items-center"
               >

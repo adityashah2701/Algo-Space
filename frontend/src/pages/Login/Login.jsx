@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Moon, Sun, Laptop, Loader2 } from 'lucide-react';
-import { useAuthStore } from '@/Store/useAuthStore';
+import { useAuthStore } from '@/Store/useAuthStore'
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -194,7 +194,7 @@ const LoginPage = () => {
             <CardFooter className="flex flex-col">
               <p className="text-sm text-center text-muted-foreground mt-2">
                 Don't have an account?{' '}
-                <Link to="/signup" className="text-primary hover:underline">
+                <Link to="/register" className="text-primary hover:underline">
                   Sign up
                 </Link>
               </p>
