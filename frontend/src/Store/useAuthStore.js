@@ -64,4 +64,18 @@ export const useAuthStore = create((set) => ({
       return error.response.data;
     }
   },
+  logout: async () => {
+    try {
+        const res = await axiosInstance.get("/auth/logout");
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        set({user: null});
+        return res.data;
+    } catch (error) {
+        console.error('Logout error:', error);
+        return error.response.data 
+
+        
+    }
+  }
 }));

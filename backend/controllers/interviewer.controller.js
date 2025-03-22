@@ -2,6 +2,7 @@
 import User from '../models/userModel.js';
 import Interview from '../models/interviewModel.js';
 import mongoose from 'mongoose';
+import { sendMail } from '../utils/sendMail.js';
 const { ObjectId } = mongoose.Types;
 
 export const getInterviewerProfile = async (req, res) => {
@@ -712,7 +713,22 @@ export const getCandidateFeedbackHistory = async (req, res) => {
     return res.status(500).json({ message: 'Server error' });
   }
 };
+export const sendInterviewMail = async (req,res) => {
+  try {
+    const {candidateEmail , code} = req.body;
 
+    const info = await sendMail({
+      to: candidateEmail,
+      subject: 'Your Interview Code',
+      text: `Your interview code is ${code}`
+    })
+
+    return res.status(200).json(info)
+    
+  } catch (error) {
+    
+  }
+}
 export default {
   // Profile Management
   getInterviewerProfile,

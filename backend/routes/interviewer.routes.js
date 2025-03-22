@@ -20,7 +20,8 @@ import {
   submitFeedback,
   searchCandidates,
   getCandidateProfile,
-  getCandidateFeedbackHistory
+  getCandidateFeedbackHistory,
+  sendInterviewMail
 } from '../controllers/interviewer.controller.js';
 import { authMiddleware ,interviewerMiddleware} from '../middlewares/auth.middleware.js';
 
@@ -58,5 +59,5 @@ router.post('/interviews/:interviewId/feedback', submitFeedback);
 router.get('/candidates/search', searchCandidates);
 router.get('/candidates/:candidateId', getCandidateProfile);
 router.get('/candidates/:candidateId/feedback', getCandidateFeedbackHistory);
-
+router.post("/send-interview-mail",sendInterviewMail)
 export default router;

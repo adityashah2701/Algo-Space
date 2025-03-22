@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Search, Briefcase, Code, BookOpen, Building, Sun, Moon, X, Menu } from "lucide-react";
+import { Search, Briefcase, Code, BookOpen, Building, Sun, Moon, X, Menu, LogOut } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { cn } from "../../lib/utils";
 import { useTheme } from "../../context/ThemeProvider";
@@ -8,6 +8,7 @@ import { useAuthStore } from "@/Store/useAuthStore";
 import LanguageSelector from "@/pages/LanguageSelector";
 
 function Header() {
+const { logout } = useAuthStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { theme, setTheme } = useTheme();
@@ -81,11 +82,17 @@ function Header() {
               ))}
               <div className="flex flex-col p-4 space-y-2">
                 {user ? (
+                  <>
                   <Link to={user.role === "interviewer" ? "/interviewer-dashboard" : "/candidate-dashboard"} className="w-full">
                     <Button variant="outline" className="w-full border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800">
                       DashBoard
                     </Button>
                   </Link>
+                  
+                    <Button variant="outline" size="icon" className="w-full border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800">
+                      <LogOut className="h-4 w-4 mr-2" />
+                    </Button>
+             </>
                 ) : (
                   <>
                     <Link to="/login" className="w-full">
@@ -136,11 +143,17 @@ function Header() {
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
           {user ? (
-            <Link to={user.role === "interviewer" ? "/interviewer-dashboard" : "/candidate-dashboard"}>
-              <Button variant="outline" size="sm" className="border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800">
-                Dashboard
-              </Button>
-            </Link>
+              <>
+              <Link to={user.role === "interviewer" ? "/interviewer-dashboard" : "/candidate-dashboard"} className="w-full">
+                <Button variant="outline" className="w-full border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800">
+                  DashBoard
+                </Button>
+              </Link>
+              
+                <Button onClick={() => logout()} variant="outline" size="icon" className="p-2 flex justify-center items-center">
+                  <LogOut className="h-4 w-4" />
+                </Button>
+         </>
           ) : (
             <>
               <Link to="/login">
