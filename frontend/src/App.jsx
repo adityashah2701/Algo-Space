@@ -8,7 +8,6 @@ import CandidateDashboard from "./pages/CandidateDashboard/CandidateDashboard";
 import InterviewerDashboard from "./pages/InterviewerDashboard/InterviewerDashboard";
 import Header from "./components/Header/Header";
 import HomePage from "./pages/Home/HomePage";
-// import QuizPage from './pages/QuizApp/QuizApp'
 
 
 
@@ -24,6 +23,7 @@ import { axiosInstance } from "./lib/axios";
 import FindJobs from "./pages/FindJobs/FindJobs";
 import { Toaster } from "react-hot-toast";
 import JobPostingPage from "./pages/JobForm/JobForm";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 
@@ -37,10 +37,10 @@ const App = () => {
     } else {
       console.log(data.message);
     }
-  },[]);
+  },[setUser]);
   useEffect(()=>{
     fetchDetails();
-  },[])
+  },[fetchDetails])
   return (
 
     <div>
@@ -51,9 +51,9 @@ const App = () => {
         
       
   
-        <Route path='/candidate-dashboard' element={<CandidateDashboard/>}/>
+        <Route path='/candidate-dashboard' element={<ProtectedRoute><CandidateDashboard/></ProtectedRoute>}/>
     
-        <Route path='/interviewer-dashboard' element={<InterviewerDashboard/>}/>
+        <Route path='/interviewer-dashboard' element={<ProtectedRoute><InterviewerDashboard/></ProtectedRoute>}/>
 
        
       
@@ -62,7 +62,7 @@ const App = () => {
     
         <Route path='/complete-profile' element={<ProfileCompletion/>}/>
         <Route path='/webrtc' element={<WEBRTC/>}/>
-<Route path="/create-job" element={<JobPostingPage/>}/>
+
         <Route path='/algo-challenge' element={<Algochallenge/>}/>
         <Route path='/ocr' element={<OCR/>}/>
         <Route path='/score' element={<Score/>}/>
