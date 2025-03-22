@@ -43,12 +43,10 @@ export const getJobBYInterviewer = async (req, res) => {
 }
 export const getAllJobs = async (req, res) => {
     try {
-      // Add pagination to handle large datasets
+      // Get page for pagination metadata
       const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 10;
-      const skip = (page - 1) * limit;
       
-      // Fetch jobs with fully populated references
+      // Fetch all jobs with populated references
       const jobs = await Job.find()
         .populate({
           path: 'interviewer',
@@ -57,19 +55,17 @@ export const getAllJobs = async (req, res) => {
         .populate({
           path: 'candidateApplied.candidateId',
           model: 'User'
-        })
-        .skip(skip)
-        .limit(limit);
+        });
       
       // Get total count for pagination info
-      const totalJobs = await Job.countDocuments();
+      const totalJobs = jobs.length;
       
-      return res.status(200).json({ 
+      return res.status(200).json({
         jobs,
         pagination: {
           total: totalJobs,
           page,
-          pages: Math.ceil(totalJobs / limit)
+          pages: 1 // Since we're returning all jobs, there's only one page
         }
       });
     } catch (error) {
