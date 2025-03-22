@@ -23,6 +23,7 @@ import { useAuthStore } from "./Store/useAuthStore";
 import { axiosInstance } from "./lib/axios";
 import FindJobs from "./pages/FindJobs/FindJobs";
 import { Toaster } from "react-hot-toast";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 
@@ -50,26 +51,22 @@ const App = () => {
         
       
   
-        <Route path='/candidate-dashboard' element={<CandidateDashboard/>}/>
+        <Route path='/candidate-dashboard' element={<ProtectedRoute><CandidateDashboard/></ProtectedRoute>}/>
     
-        <Route path='/interviewer-dashboard' element={<InterviewerDashboard/>}/>
+        <Route path='/interviewer-dashboard' element={<ProtectedRoute><InterviewerDashboard/></ProtectedRoute>}/>
 
        
       
         <Route path='/login' element={<LoginPage/>}/>
         <Route path='/register' element={<SignupPage/>}/>
     
-        <Route path='/complete-profile' element={<ProfileCompletion/>}/>
-        <Route path='/webrtc' element={<WEBRTC/>}/>
+        <Route path='/complete-profile' element={<ProtectedRoute><ProfileCompletion/></ProtectedRoute>}/>
+        <Route path='/webrtc' element={<ProtectedRoute><WEBRTC/></ProtectedRoute>}/>
 
-        <Route path='/algo-challenge' element={<Algochallenge/>}/>
-        <Route path='/ocr' element={<OCR/>}/>
-        <Route path='/score' element={<Score/>}/>
-        <Route path='/jobs' element={<FindJobs/>}/>
-
-        
-       
-
+        <Route path='/algo-challenge' element={<ProtectedRoute><Algochallenge/></ProtectedRoute>}/>
+        <Route path='/ocr' element={<ProtectedRoute><OCR/></ProtectedRoute>}/>
+        <Route path='/score' element={<ProtectedRoute><Score/></ProtectedRoute>}/>
+        <Route path='/jobs' element={<ProtectedRoute><FindJobs/></ProtectedRoute>}/>
         </Routes>
       </ThemeProvider>
       <Toaster/>

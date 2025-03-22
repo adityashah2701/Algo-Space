@@ -113,7 +113,7 @@ const { logout } = useAuthStore();
         )}
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-6 flex-grow justify-center">
+        {user && <nav className="hidden md:flex space-x-6 flex-grow justify-center">
           {navigation.map((item) => (
             <NavLink
               key={item.name}
@@ -129,7 +129,7 @@ const { logout } = useAuthStore();
               {item.name}
             </NavLink>
           ))}
-        </nav>
+        </nav>}
 
         {/* Desktop Right Side buttons */}
         <div className="hidden md:flex items-center gap-4">

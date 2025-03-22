@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Moon, Sun, Laptop, Loader2 } from 'lucide-react';
-import { useAuthStore } from '@/store/useAuthStore';
+import { useAuthStore } from '@/Store/useAuthStore';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -209,15 +209,13 @@ const LoginPage = () => {
               key={i} 
               className={`rounded-lg bg-primary/40 transform ${
                 i % 3 === 0 ? 'rotate-3' : i % 3 === 1 ? '-rotate-2' : 'rotate-6'
-              } ${
-                i === 4 ? 'scale-125' : ''
               }`}
             />
           ))}
         </div>
-        <div className="max-w-lg z-10 p-8 rounded-full">
-          <div className="text-center">
-           <img src="/logo.png" alt="Logo" />
+        <div className="max-w-md z-40 p-8 rounded-full">
+          <div className="text-center ">
+           <img  src="/logo.png" alt="Logo" />
           </div>
         </div>
       </div>
