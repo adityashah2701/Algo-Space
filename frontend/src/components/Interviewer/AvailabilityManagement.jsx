@@ -64,6 +64,7 @@ import {
 } from 'lucide-react';
 import { axiosInstance } from '@/lib/axios';
 import toast from 'react-hot-toast';
+import { set } from 'date-fns';
 
 const InterviewerJobsTable = () => {
   const [jobs, setJobs] = useState([]);
@@ -80,6 +81,7 @@ const InterviewerJobsTable = () => {
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
   const [emailContent, setEmailContent] = useState('');
   const [inviteLoading, setInviteLoading] = useState(false);
+  const [interviewId,setinterviewId] = useState('');
 
   // New job form data
   const [newJob, setNewJob] = useState({
@@ -307,6 +309,7 @@ ${selectedJob.companyName}`;
 
     setEmailContent(emailTemplate);
     setIsInviteDialogOpen(true);
+    setinterviewId(interviewId);
   };
 
   // Send interview invitation email
@@ -318,13 +321,13 @@ ${selectedJob.companyName}`;
       
       // Create email data
       const emailData = {
-        to: selectedCandidate.candidateId.email,
-        subject: `Interview Invitation: ${selectedJob.companyName} - ${selectedJob.jobs[0].title}`,
+        candidateEmail: selectedCandidate.candidateId.email,
+        // subject: `Interview Invitation: ${selectedJob.companyName} - ${selectedJob.jobs[0].title}`,
         text: emailContent,
-        candidateId: selectedCandidate.candidateId._id,
-        jobId: selectedJob._id
+        code: interviewId
       };
       
+      const response = await axiosInstance.post('http://localhost:3000/api/interviewer/send-interview-mail', emailData);
       // API call to send email and update status
       // In a real app, uncomment the below line and implement the API endpoint
       // await axiosInstance.post('http://localhost:3000/api/job/send-invitation', emailData);

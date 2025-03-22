@@ -14,9 +14,10 @@ const { logout } = useAuthStore();
   const { theme, setTheme } = useTheme();
   const user = JSON.parse(localStorage.getItem('user'));
   const navigation = [
-    { name: "FIND JOBS", href: "/jobs", icon: <Search className="h-4 w-4 mr-2" /> },
+    { name: "FIND JOBS", href: "/jobs", icon: <Briefcase className="h-4 w-4 mr-2" /> },
     { name: "ALGORITHM CHALLENGES", href: "/algo-challenge", icon: <Code className="h-4 w-4 mr-2" /> },
-    { name: "LEETCODE ANALAZER", href: "/score", icon: <BookOpen className="h-4 w-4 mr-2" /> },
+    { name: "LEETCODE ANALYZER", href: "/score", icon: <BookOpen className="h-4 w-4 mr-2" /> },
+    { name: "MEETING", href: "/webrtc", icon: <Building className="h-4 w-4 mr-2" /> },
   ];
 
   // Close mobile menu when route changes
