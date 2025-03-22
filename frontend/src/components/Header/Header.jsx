@@ -18,6 +18,7 @@ const { logout } = useAuthStore();
     { name: "ALGORITHM CHALLENGES", href: "/algo-challenge", icon: <Code className="h-4 w-4 mr-2" /> },
     { name: "LEETCODE ANALYZER", href: "/score", icon: <BookOpen className="h-4 w-4 mr-2" /> },
     { name: "MEETING", href: "/webrtc", icon: <Building className="h-4 w-4 mr-2" /> },
+    { name: "OCR", href: "/ocr", icon: <Building className="h-4 w-4 mr-2" /> },
   ];
 
   // Close mobile menu when route changes

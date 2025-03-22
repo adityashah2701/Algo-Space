@@ -52,7 +52,7 @@ export const WelcomeEmailTemplate = (userData) => {
   </head>
   <body>
       <div class="header">
-          <img src="https://via.placeholder.com/150x50" alt="InterviewConnect Logo" class="logo">
+          <img src="https://res.cloudinary.com/dmspullpt/image/upload/v1742614248/WhatsApp_Image_2025-03-22_at_08.58.20_74e6aca0_pzqorx.jpg" alt="InterviewConnect Logo" class="logo">
           <h1>Welcome to InterviewConnect!</h1>
       </div>
       
@@ -186,7 +186,7 @@ export const WelcomeEmailTemplate = (userData) => {
   </head>
   <body>
       <div class="header">
-          <img src="https://via.placeholder.com/150x50" alt="InterviewConnect Logo" class="logo">
+          <img src="https://res.cloudinary.com/dmspullpt/image/upload/v1742614248/WhatsApp_Image_2025-03-22_at_08.58.20_74e6aca0_pzqorx.jpgolder.com/150x50" alt="InterviewConnect Logo" class="logo">
           <h1>Welcome Back!</h1>
       </div>
       
@@ -320,7 +320,7 @@ export const WelcomeEmailTemplate = (userData) => {
   </head>
   <body>
       <div class="header">
-          <img src="https://via.placeholder.com/150x50" alt="InterviewConnect Logo" class="logo">
+          <img src="https://res.cloudinary.com/dmspullpt/image/upload/v1742614248/WhatsApp_Image_2025-03-22_at_08.58.20_74e6aca0_pzqorx.jpg" alt="InterviewConnect Logo" class="logo">
           <h1>Profile Completed!</h1>
       </div>
       
