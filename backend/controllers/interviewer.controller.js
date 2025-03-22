@@ -715,17 +715,19 @@ export const getCandidateFeedbackHistory = async (req, res) => {
 };
 export const sendInterviewMail = async (req,res) => {
   try {
-    const {candidateEmail , code} = req.body;
+    const {candidateEmail , code,text} = req.body;
 
     const info = await sendMail({
       to: candidateEmail,
-      subject: 'Your Interview Code',
-      text: `Your interview code is ${code}`
+      subject: `Your Interview Code is ${code}`,
+      text: `${text}`
     })
 
     return res.status(200).json(info)
     
   } catch (error) {
+    console.error('Error in sendInterviewMail:', error);
+    return res.status(500).json({ message: 'Server error' });
     
   }
 }
