@@ -15,7 +15,7 @@ function Header() {
   const navigation = [
     { name: "FIND JOBS", href: "/jobs", icon: <Search className="h-4 w-4 mr-2" /> },
     { name: "ALGORITHM CHALLENGES", href: "/algo-challenge", icon: <Code className="h-4 w-4 mr-2" /> },
-    { name: "LEARNING RESOURCES", href: "/resources", icon: <BookOpen className="h-4 w-4 mr-2" /> },
+    { name: "LEETCODE ANALAZER", href: "/score", icon: <BookOpen className="h-4 w-4 mr-2" /> },
   ];
 
   // Close mobile menu when route changes

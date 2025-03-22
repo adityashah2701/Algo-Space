@@ -280,7 +280,8 @@ function LeetCodeSkillAnalyzer() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="e.g. johndoe"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-lg px-4 py-3"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 
+                text-lg px-4 py-3 text-black"
                 required
                 disabled={loading}
               />
@@ -330,7 +331,7 @@ function LeetCodeSkillAnalyzer() {
       {assessment && !loading && !error && (
         <div className="bg-white rounded-lg shadow-lg p-6 max-w-5xl mx-auto">
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold mb-1">LeetCode Skill Assessment</h1>
+            <h1 className="text-2xl font-bold mb-1 text-black">LeetCode Skill Assessment</h1>
             <div className="flex justify-center items-center">
               <div className={`text-black ${getSkillLevelColor(assessment.skillLevel)} rounded-full px-4 py-1 text-lg font-semibold`}>
                 {assessment.skillLevel} Coder
@@ -344,7 +345,7 @@ function LeetCodeSkillAnalyzer() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
             {/* Score Breakdown */}
             <div className="bg-gray-50 p-4 rounded-lg">
-              <h2 className="text-xl font-semibold mb-4">Skill Score Breakdown</h2>
+              <h2 className="text-xl font-semibold mb-4 text-black">Skill Score Breakdown</h2>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart outerRadius="70%" data={assessment.scoreBreakdown}>
@@ -373,7 +374,7 @@ function LeetCodeSkillAnalyzer() {
 
             {/* Monthly Activity */}
             <div className="bg-gray-50 p-4 rounded-lg">
-              <h2 className="text-xl font-semibold mb-4">Monthly Submission Activity</h2>
+              <h2 className="text-xl font-semibold mb-4 text-black">Monthly Submission Activity</h2>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={assessment.monthlyData}>
@@ -390,76 +391,76 @@ function LeetCodeSkillAnalyzer() {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-blue-50 p-4 rounded-lg">
-              <h3 className="text-lg font-semibold mb-2">Consistency</h3>
-              <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold mb-2 text-black">Consistency</h3>
+              <div className="flex justify-between items-center text-black">
                 <div>
-                  <div className="text-sm text-gray-600">Current Streak</div>
-                  <div className="text-2xl font-bold">{assessment.metrics.streak} days</div>
+                  <div className="text-sm  text-black">Current Streak</div>
+                  <div className="text-2xl font-bold text-black">{assessment.metrics.streak} days</div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-600">Active Days</div>
-                  <div className="text-2xl font-bold">{assessment.metrics.totalActiveDays}</div>
+                  <div className="text-sm  text-black">Active Days</div>
+                  <div className="text-2xl font-bold text-black">{assessment.metrics.totalActiveDays}</div>
                 </div>
               </div>
             </div>
 
             <div className="bg-indigo-50 p-4 rounded-lg">
-              <h3 className="text-lg font-semibold mb-2">Productivity</h3>
+              <h3 className="text-lg font-semibold mb-2 text-black">Productivity</h3>
               <div className="flex justify-between items-center">
                 <div>
-                  <div className="text-sm text-gray-600">Total Submissions</div>
-                  <div className="text-2xl font-bold">{assessment.metrics.totalSubmissions}</div>
+                  <div className="text-sm text-black">Total Submissions</div>
+                  <div className="text-2xl font-bold text-black">{assessment.metrics.totalSubmissions}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-600">Max Daily</div>
-                  <div className="text-2xl font-bold">{assessment.metrics.maxSubmissionsInOneDay}</div>
+                  <div className="text-sm text-black">Max Daily</div>
+                  <div className="text-2xl font-bold text-black">{assessment.metrics.maxSubmissionsInOneDay}</div>
                 </div>
               </div>
             </div>
 
             <div className="bg-purple-50 p-4 rounded-lg">
-              <h3 className="text-lg font-semibold mb-2">Intensity</h3>
+              <h3 className="text-lg font-semibold mb-2 text-black">Intensity</h3>
               <div className="flex justify-between items-center">
                 <div>
-                  <div className="text-sm text-gray-600">High-Intensity Days</div>
-                  <div className="text-2xl font-bold">{assessment.metrics.intenseDays}</div>
+                  <div className="text-sm text-black">High-Intensity Days</div>
+                  <div className="text-2xl font-bold text-black">{assessment.metrics.intenseDays}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-600">Percentage</div>
-                  <div className="text-2xl font-bold">{assessment.metrics.percentIntenseDays}%</div>
+                  <div className="text-sm text-black">Percentage</div>
+                  <div className="text-2xl font-bold text-black">{assessment.metrics.percentIntenseDays}%</div>
                 </div>
               </div>
             </div>
 
             <div className="bg-green-50 p-4 rounded-lg">
-              <h3 className="text-lg font-semibold mb-2">Growth</h3>
+              <h3 className="text-lg font-semibold mb-2 text-black">Growth</h3>
               <div className="flex justify-between items-center">
                 <div>
-                  <div className="text-sm text-gray-600">Recent Change</div>
+                  <div className="text-sm text-black">Recent Change</div>
                   <div className={`text-2xl font-bold ${Number(assessment.metrics.improvementRate) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {assessment.metrics.improvementRate}%
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-600">Avg per Day</div>
-                  <div className="text-2xl font-bold">{assessment.metrics.averageSubmissionsPerActiveDay}</div>
+                  <div className="text-sm text-black">Avg per Day</div>
+                  <div className="text-2xl font-bold text-black">{assessment.metrics.averageSubmissionsPerActiveDay}</div>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="bg-gray-50 p-4 rounded-lg mb-6">
-            <h2 className="text-xl font-semibold mb-4">Skill Development Recommendations</h2>
+            <h2 className="text-xl font-semibold mb-4 text-black">Skill Development Recommendations</h2>
             <ol className="list-decimal pl-5 space-y-2">
               {assessment.recommendations.map((recommendation, index) => (
-                <li key={index} className="text-gray-800">{recommendation}</li>
+                <li key={index} className="text-black">{recommendation}</li>
               ))}
             </ol>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
             <div className="bg-gray-50 p-4 rounded-lg">
-              <h2 className="text-xl font-semibold mb-4">Score Breakdown</h2>
+              <h2 className="text-xl font-semibold mb-4 text-black">Score Breakdown</h2>
               <div className="space-y-3">
                 {Object.entries(assessment.scores).map(([key, value]) => {
                   if (key === 'totalScore') return null;
