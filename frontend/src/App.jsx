@@ -62,6 +62,7 @@ const App = () => {
     
         <Route path='/complete-profile' element={<ProtectedRoute><ProfileCompletion/></ProtectedRoute>}/>
         <Route path='/webrtc' element={<ProtectedRoute><WEBRTC/></ProtectedRoute>}/>
+        <Route path='/create-job' element={<ProtectedRoute><JobPostingPage/></ProtectedRoute>}/>
 
         <Route path='/algo-challenge' element={<ProtectedRoute><Algochallenge/></ProtectedRoute>}/>
         <Route path='/ocr' element={<ProtectedRoute><OCR/></ProtectedRoute>}/>
