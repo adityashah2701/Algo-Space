@@ -194,7 +194,7 @@ const LoginPage = () => {
             <CardFooter className="flex flex-col">
               <p className="text-sm text-center text-muted-foreground mt-2">
                 Don't have an account?{' '}
-                <Link to="/signup" className="text-primary hover:underline">
+                <Link to="/register" className="text-primary hover:underline">
                   Sign up
                 </Link>
               </p>
