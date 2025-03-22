@@ -65,6 +65,14 @@ export const userRegister = async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
+    const info = await sendMail({
+      to: newUser.email,
+      subject: "Welcome To Algo Space",
+      html: WelcomeEmailTemplate(newUser),
+    })
+    if (!info.accepted.includes(newUser.email)) {
+      return res.status(400).json({ message: "Failed to send welcome email" });
+    }
 
     return res.status(201).json({
       success: true,
@@ -103,6 +111,8 @@ export const completeUserProfile = async (req, res) => {
 
     await user.save();
 
+    const info = await sendMail({ to: user.email, subject: "Profile Completion", html: ProfileCompletionEmailTemplate(user) });
+
     return res.status(200).json({
       success: true,
       message: "Profile completed successfully",
@@ -139,6 +149,8 @@ export const userLogin = async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
+
+    const info = await sendMail({ to: user.email, subject: "Login Notification", html:   WelcomeBackEmailTemplate(user) });
 
     return res.status(200).json({
       success: true,

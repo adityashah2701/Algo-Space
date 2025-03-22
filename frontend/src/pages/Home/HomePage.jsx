@@ -1,42 +1,62 @@
-import React, { useState } from 'react';
-import { 
-  Zap, 
-  Globe, 
-  Users, 
-  TrendingUp, 
-  Star, 
-  CheckCircle, 
+import React, { useState } from "react";
+import {
+  Zap,
+  Globe,
+  Users,
+  TrendingUp,
+  Star,
+  CheckCircle,
   ArrowRight,
   Briefcase,
   MapPin,
   Award,
-  Check
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useNavigate } from 'react-router-dom';
+  Check,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
+
+import { toast } from "react-hot-toast"; // Optional: for showing notifications
+import { axiosInstance } from "@/lib/axios";
+import PaymentSuccessModal from "../../components/PDFgenerator/paymentSuccessModal"; // Import the success modal
 
 const HomePage = () => {
-  const [email, setEmail] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
-  const navigate = useNavigate()
+  const [email, setEmail] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loadingPlan, setLoadingPlan] = useState(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [paymentData, setPaymentData] = useState(null);
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const navigate = useNavigate();
+
   const subscriptionPlans = [
     {
+      id: "basic",
       name: "Basic",
       price: "₹ 199",
+      priceInPaisa: 19900,
       description: "Perfect for getting started",
       features: [
         "10 job applications per month",
         "Basic job matching",
         "Email notifications",
-        "Basic profile features"
+        "Basic profile features",
       ],
       color: "blue",
-      popular: false
+      popular: false,
     },
     {
+      id: "premium",
       name: "Premium",
       price: "₹ 499",
+      priceInPaisa: 49900,
       description: "Most popular choice for professionals",
       features: [
         "Unlimited job applications",
@@ -44,14 +64,16 @@ const HomePage = () => {
         "Priority application status",
         "Custom job alerts",
         "Resume builder",
-        "1-on-1 career coaching session"
+        "1-on-1 career coaching session",
       ],
       color: "purple",
-      popular: true
+      popular: true,
     },
     {
+      id: "enterprise",
       name: "Enterprise",
       price: "₹ 999",
+      priceInPaisa: 99900,
       description: "For serious career advancement",
       features: [
         "All Premium features",
@@ -60,54 +82,189 @@ const HomePage = () => {
         "Executive networking events",
         "Industry insights reports",
         "Personal brand development",
-        "LinkedIn profile optimization"
+        "LinkedIn profile optimization",
       ],
       color: "gold",
-      popular: false
-    }
+      popular: false,
+    },
   ];
 
   const jobFeatures = [
     {
       icon: <Globe className="w-10 h-10 text-blue-500" />,
-      title: 'Global Opportunities',
-      description: 'Discover jobs from around the world, breaking geographical barriers'
+      title: "Global Opportunities",
+      description:
+        "Discover jobs from around the world, breaking geographical barriers",
     },
     {
       icon: <Award className="w-10 h-10 text-green-500" />,
-      title: 'AI-Powered Matching',
-      description: 'Advanced algorithms connect you with perfectly aligned roles'
+      title: "AI-Powered Matching",
+      description:
+        "Advanced algorithms connect you with perfectly aligned roles",
     },
     {
       icon: <Briefcase className="w-10 h-10 text-purple-500" />,
-      title: 'Career Intelligence',
-      description: 'Insights that help you make informed career decisions'
-    }
+      title: "Career Intelligence",
+      description: "Insights that help you make informed career decisions",
+    },
   ];
 
   const testimonials = [
     {
-      name: 'Emily Rodriguez',
-      role: 'Senior Tech Recruiter',
-      quote: 'CareerAI has transformed our talent acquisition strategy. The depth of insights is unparalleled.',
-      avatar: '/api/placeholder/80/80'
+      name: "Emily Rodriguez",
+      role: "Senior Tech Recruiter",
+      quote:
+        "CareerAI has transformed our talent acquisition strategy. The depth of insights is unparalleled.",
+      avatar: "/api/placeholder/80/80",
     },
     {
-      name: 'Michael Chen',
-      role: 'Career Development Specialist',
-      quote: 'Never before have I seen such precise job-skill matching. It\'s like having a career coach and recruiter in one platform.',
-      avatar: '/api/placeholder/80/80'
-    }
+      name: "Michael Chen",
+      role: "Career Development Specialist",
+      quote:
+        "Never before have I seen such precise job-skill matching. It's like having a career coach and recruiter in one platform.",
+      avatar: "/api/placeholder/80/80",
+    },
   ];
 
   const handleEmailSubmit = (e) => {
     e.preventDefault();
-    console.log('Email submitted:', email);
+    console.log("Email submitted:", email);
   };
 
   const handleJobSearch = (e) => {
     e.preventDefault();
-    console.log('Job search:', searchQuery);
+    console.log("Job search:", searchQuery);
+  };
+
+  // Get current user data
+  const getUserData = () => {
+    // This is a placeholder - replace with your actual user data retrieval
+    // You might get this from your auth context, Redux store, or localStorage
+    return {
+      id: localStorage.getItem("userId") || "",
+      name: localStorage.getItem("userName") || "",
+      email: localStorage.getItem("userEmail") || "",
+    };
+  };
+
+  // Razorpay payment handling
+  const handleSubscription = async (plan) => {
+    try {
+      setLoadingPlan(plan.id);
+      setSelectedPlan(plan); // Store the selected plan for receipt generation
+
+      // Check if user is authenticated
+      const token = localStorage.getItem("token");
+      if (!token) {
+        if (typeof toast !== "undefined") {
+          toast.error("Please login to subscribe");
+        } else {
+          alert("Please login to subscribe");
+        }
+        navigate("/login", { state: { from: "/" } });
+        return;
+      }
+
+      // Create order on your backend
+      const { data } = await axiosInstance.post("/payments/create-order", {
+        planId: plan.id,
+      });
+
+      // Load Razorpay if not already loaded
+      if (!window.Razorpay) {
+        if (typeof toast !== "undefined") {
+          toast.error("Payment gateway not loaded. Please refresh the page");
+        } else {
+          alert("Payment gateway not loaded. Please refresh the page");
+        }
+        return;
+      }
+
+      // Create Razorpay checkout options
+      const options = {
+        key: data.key_id,
+        amount: data.amount,
+        currency: data.currency,
+        name: "AlgoSpace",
+        description: `Subscription to ${plan.name} Plan`,
+        order_id: data.order_id,
+        prefill: {
+          name: getUserData().name || "",
+          email: getUserData().email || "",
+          contact: "",
+        },
+        notes: {
+          planId: plan.id,
+        },
+        theme: {
+          color: "#3399cc",
+        },
+        handler: async function (response) {
+          try {
+            // Verify payment on your backend
+            const verificationResponse = await axiosInstance.post(
+              "/payments/verify-payment",
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                plan_id: plan.id,
+              }
+            );
+
+            if (verificationResponse.data.success) {
+              // Store payment data for the receipt
+              setPaymentData(response);
+
+              // Show success modal with receipt
+              setShowSuccessModal(true);
+
+              if (typeof toast !== "undefined") {
+                toast.success("Subscription activated successfully!");
+              } else {
+                alert("Subscription activated successfully!");
+              }
+            } else {
+              if (typeof toast !== "undefined") {
+                toast.error("Payment verification failed");
+              } else {
+                alert("Payment verification failed");
+              }
+            }
+          } catch (error) {
+            console.error("Error verifying payment:", error);
+            if (typeof toast !== "undefined") {
+              toast.error("Payment verification failed");
+            } else {
+              alert("Payment verification failed");
+            }
+          }
+        },
+      };
+
+      // Open Razorpay checkout
+      const razorpayInstance = new window.Razorpay(options);
+      razorpayInstance.open();
+
+      // Handle payment failures
+      razorpayInstance.on("payment.failed", function (response) {
+        if (typeof toast !== "undefined") {
+          toast.error("Payment failed. Please try again.");
+        } else {
+          alert("Payment failed. Please try again.");
+        }
+        console.error("Payment failed:", response.error);
+      });
+    } catch (error) {
+      console.error("Error creating order:", error);
+      if (typeof toast !== "undefined") {
+        toast.error("Failed to initiate payment process");
+      } else {
+        alert("Failed to initiate payment process");
+      }
+    } finally {
+      setLoadingPlan(null);
+    }
   };
 
   return (
@@ -115,25 +272,44 @@ const HomePage = () => {
       {/* Hero Section */}
       <div className="container mx-auto px-4 md:px-8 lg:px-12 pt-16 pb-16 relative flex items-center">
         <div className="absolute top-0 left-0 right-0 h-full bg-gradient-to-r from-blue-900/20 to-purple-900/20 -z-10 opacity-50 blur-3xl"></div>
-        
+
         <div className="grid md:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
           <div>
             <h1 className="text-7xl md:text-5xl font-bold mb-6 leading-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
               Unlock Your Career Potential
             </h1>
             <p className="text-lg md:text-xl text-gray-300 mb-10">
-              Leverage AI-driven insights to discover, match, and excel in your dream career. We don't just find jobs, we craft professional journeys.
+              Leverage AI-driven insights to discover, match, and excel in your
+              dream career. We don't just find jobs, we craft professional
+              journeys.
             </p>
-            
+
             <form className="backdrop-blur-md rounded-xl p-2 flex flex-col md:flex-row justify-center items-center w-full">
               <div className="relative flex-grow mr-0 md:mr-2 mb-2 md:mb-0 w-full">
                 <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect
+                      x="2"
+                      y="7"
+                      width="20"
+                      height="14"
+                      rx="2"
+                      ry="2"
+                    ></rect>
                     <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                   </svg>
                 </div>
-                <input 
+                <input
                   type="text"
                   placeholder="Job title, skills, or company"
                   className="w-full pl-10 pr-4 py-3 bg-transparent border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -141,32 +317,42 @@ const HomePage = () => {
               </div>
               <div className="relative flex-grow mr-0 md:mr-2 mb-2 md:mb-0 w-full">
                 <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                     <circle cx="12" cy="10" r="3"></circle>
                   </svg>
                 </div>
-                <input 
+                <input
                   type="text"
                   placeholder="Location or 'Remote'"
                   className="w-full pl-10 pr-4 py-3 bg-transparent border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              <Button 
-              onClick={()=> navigate("/jobs")}
-                type="submit" 
+              <Button
+                onClick={() => navigate("/jobs")}
+                type="submit"
                 className="bg-blue-600 text-white py-6 px-10 rounded-lg hover:bg-blue-700 transition justify-center flex items-center"
               >
                 Find Jobs
               </Button>
             </form>
           </div>
-          
+
           <div className="hidden md:block">
             <div className="backdrop-blur-md p-6 ml-3">
-              <img 
-                src="/img1.png" 
-                alt="Career Insights Visualization" 
+              <img
+                src="/img1.png"
+                alt="Career Insights Visualization"
                 className="rounded-xl transform hover:scale-105 transition duration-300 w-full"
               />
             </div>
@@ -181,87 +367,161 @@ const HomePage = () => {
             {/* Stat Card 1 */}
             <div className="bg-gray-800/70 rounded-xl p-6 backdrop-blur-sm border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 flex flex-col items-center text-center">
               <div className="bg-blue-500/10 p-3 rounded-lg mb-4">
-                <svg className="w-8 h-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  className="w-8 h-8 text-blue-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
                 </svg>
               </div>
-              <h3 className="text-4xl font-bold text-blue-400 mb-1">500<span className="text-blue-500">+</span></h3>
-              <h4 className="text-lg font-medium text-gray-300 mb-2">Job Categories</h4>
-              <p className="text-gray-400 text-sm">Diverse opportunities across industries</p>
+              <h3 className="text-4xl font-bold text-blue-400 mb-1">
+                500<span className="text-blue-500">+</span>
+              </h3>
+              <h4 className="text-lg font-medium text-gray-300 mb-2">
+                Job Categories
+              </h4>
+              <p className="text-gray-400 text-sm">
+                Diverse opportunities across industries
+              </p>
             </div>
-            
+
             {/* Stat Card 2 */}
             <div className="bg-gray-800/70 rounded-xl p-6 backdrop-blur-sm border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/10 flex flex-col items-center text-center">
               <div className="bg-green-500/10 p-3 rounded-lg mb-4">
-                <svg className="w-8 h-8 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  className="w-8 h-8 text-green-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                   <polyline points="22 4 12 14.01 9 11.01" />
                 </svg>
               </div>
-              <h3 className="text-4xl font-bold text-blue-400 mb-1">98<span className="text-green-500">%</span></h3>
-              <h4 className="text-lg font-medium text-gray-300 mb-2">Match Accuracy</h4>
-              <p className="text-gray-400 text-sm">Precision-driven job recommendations</p>
+              <h3 className="text-4xl font-bold text-blue-400 mb-1">
+                98<span className="text-green-500">%</span>
+              </h3>
+              <h4 className="text-lg font-medium text-gray-300 mb-2">
+                Match Accuracy
+              </h4>
+              <p className="text-gray-400 text-sm">
+                Precision-driven job recommendations
+              </p>
             </div>
-            
+
             {/* Stat Card 3 */}
             <div className="bg-gray-800/70 rounded-xl p-6 backdrop-blur-sm border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 flex flex-col items-center text-center">
               <div className="bg-purple-500/10 p-3 rounded-lg mb-4">
-                <svg className="w-8 h-8 text-purple-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  className="w-8 h-8 text-purple-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                   <circle cx="9" cy="7" r="4" />
                   <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
               </div>
-              <h3 className="text-4xl font-bold text-blue-400 mb-1">10k<span className="text-purple-500">+</span></h3>
-              <h4 className="text-lg font-medium text-gray-300 mb-2">Active Users</h4>
-              <p className="text-gray-400 text-sm">Growing professional community</p>
+              <h3 className="text-4xl font-bold text-blue-400 mb-1">
+                10k<span className="text-purple-500">+</span>
+              </h3>
+              <h4 className="text-lg font-medium text-gray-300 mb-2">
+                Active Users
+              </h4>
+              <p className="text-gray-400 text-sm">
+                Growing professional community
+              </p>
             </div>
-            
+
+            {/* Stat Card 4 */}
             {/* Stat Card 4 */}
             <div className="bg-gray-800/70 rounded-xl p-6 backdrop-blur-sm border border-gray-700/50 hover:border-yellow-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/10 flex flex-col items-center text-center">
               <div className="bg-yellow-500/10 p-3 rounded-lg mb-4">
-                <svg className="w-8 h-8 text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  className="w-8 h-8 text-yellow-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
                   <polyline points="17 6 23 6 23 12" />
                 </svg>
               </div>
-              <h3 className="text-4xl font-bold text-blue-400 mb-1">$2.5<span className="text-yellow-500">B</span></h3>
-              <h4 className="text-lg font-medium text-gray-300 mb-2">Total Opportunities</h4>
+              <h3 className="text-4xl font-bold text-blue-400 mb-1">
+                $2.5<span className="text-yellow-500">B</span>
+              </h3>
+              <h4 className="text-lg font-medium text-gray-300 mb-2">
+                Total Opportunities
+              </h4>
               <p className="text-gray-400 text-sm">Vast career potential</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Subscription Plans */}
+      {/* Subscription Plans - Now with Razorpay Integration */}
       <div className="container mx-auto px-4 py-16">
         <h2 className="text-4xl font-bold text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
           Choose Your Plan
         </h2>
         <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
-          Select the perfect plan that matches your career goals and aspirations. Upgrade or downgrade anytime.
+          Select the perfect plan that matches your career goals and
+          aspirations. Upgrade or downgrade anytime.
         </p>
         <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {subscriptionPlans.map((plan, index) => (
-            <Card key={index} className={`relative bg-gray-800/50 border-gray-700/50 backdrop-blur-sm overflow-hidden ${plan.popular ? 'ring-2 ring-purple-500 transform scale-105' : ''}`}>
+            <Card
+              key={index}
+              className={`relative bg-gray-800/50 border-gray-700/50 backdrop-blur-sm overflow-hidden ${
+                plan.popular ? "ring-2 ring-purple-500 transform scale-105" : ""
+              }`}
+            >
               {plan.popular && (
                 <div className="absolute top-0 right-0 bg-purple-500 text-white px-4 py-1 rounded-bl-lg text-sm font-medium">
                   Most Popular
                 </div>
               )}
               <CardHeader>
-                <CardTitle className="text-2xl font-bold text-white">{plan.name}</CardTitle>
-                <CardDescription className="text-gray-400">{plan.description}</CardDescription>
+                <CardTitle className="text-2xl font-bold text-white">
+                  {plan.name}
+                </CardTitle>
+                <CardDescription className="text-gray-400">
+                  {plan.description}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-white">{plan.price}</span>
+                  <span className="text-4xl font-bold text-white">
+                    {plan.price}
+                  </span>
                   <span className="text-gray-400 ml-2">/month</span>
                 </div>
                 <ul className="space-y-3">
                   {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center text-gray-300">
+                    <li
+                      key={featureIndex}
+                      className="flex items-center text-gray-300"
+                    >
                       <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
                       <span>{feature}</span>
                     </li>
@@ -269,14 +529,16 @@ const HomePage = () => {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button 
+                <Button
                   className={`w-full ${
-                    plan.popular 
-                      ? 'bg-purple-600 hover:bg-purple-700' 
-                      : 'bg-gray-700 hover:bg-gray-600'
+                    plan.popular
+                      ? "bg-purple-600 hover:bg-purple-700"
+                      : "bg-gray-700 hover:bg-gray-600"
                   } text-white`}
+                  disabled={loadingPlan === plan.id}
+                  onClick={() => handleSubscription(plan)}
                 >
-                  Get Started
+                  {loadingPlan === plan.id ? "Processing..." : "Get Started"}
                 </Button>
               </CardFooter>
             </Card>
@@ -291,19 +553,28 @@ const HomePage = () => {
         </h2>
         <div className="grid md:grid-cols-3 gap-8">
           {jobFeatures.map((feature, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-center hover:bg-white/20 transition transform hover:-translate-y-2"
             >
-              <div className="flex justify-center mb-6">
-                {feature.icon}
-              </div>
-              <h3 className="text-xl font-semibold mb-4 text-white">{feature.title}</h3>
+              <div className="flex justify-center mb-6">{feature.icon}</div>
+              <h3 className="text-xl font-semibold mb-4 text-white">
+                {feature.title}
+              </h3>
               <p className="text-white/70">{feature.description}</p>
             </div>
           ))}
         </div>
       </div>
+      {paymentData && selectedPlan && (
+        <PaymentSuccessModal
+          isOpen={showSuccessModal}
+          onClose={() => setShowSuccessModal(false)}
+          paymentData={paymentData}
+          plan={selectedPlan}
+          userData={getUserData()}
+        />
+      )}
 
       {/* Testimonials */}
       <div id="testimonials" className="container mx-auto px-4 py-16">
@@ -312,18 +583,20 @@ const HomePage = () => {
         </h2>
         <div className="flex justify-center space-x-8">
           {testimonials.map((testimonial, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-96 hover:bg-white/20 transition transform hover:-translate-y-2"
             >
               <div className="flex items-center mb-6">
-                <img 
+                <img
                   src="/image.png"
                   alt={testimonial.name}
                   className="w-16 h-16 rounded-full mr-4 border-2 border-blue-500"
                 />
                 <div>
-                  <h4 className="font-semibold text-white">{testimonial.name}</h4>
+                  <h4 className="font-semibold text-white">
+                    {testimonial.name}
+                  </h4>
                   <p className="text-white/70 text-sm">{testimonial.role}</p>
                 </div>
               </div>
@@ -345,10 +618,11 @@ const HomePage = () => {
             Ready to Transform Your Career?
           </h2>
           <p className="text-xl text-white/80 mb-10">
-            Join thousands of professionals who've found their perfect career path with CareerAI
+            Join thousands of professionals who've found their perfect career
+            path with CareerAI
           </p>
           <form onSubmit={handleEmailSubmit} className="max-w-xl mx-auto flex">
-            <input 
+            <input
               type="email"
               placeholder="Enter your email"
               className="flex-grow px-6 py-4 rounded-l-lg bg-white/20 backdrop-blur-md text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white"
@@ -356,8 +630,8 @@ const HomePage = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="bg-white text-blue-600 px-8 py-4 rounded-r-lg hover:bg-gray-100 transition flex items-center"
             >
               Get Started
@@ -366,6 +640,17 @@ const HomePage = () => {
           </form>
         </div>
       </div>
+
+      {/* Payment Success Modal */}
+      {paymentData && selectedPlan && (
+        <PaymentSuccessModal
+          isOpen={showSuccessModal}
+          onClose={() => setShowSuccessModal(false)}
+          paymentData={paymentData}
+          plan={selectedPlan}
+          userData={getUserData()}
+        />
+      )}
     </div>
   );
 };
