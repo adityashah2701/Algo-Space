@@ -10,7 +10,7 @@ import { PlatformStats } from '@/components/skills/PlatformSkills';
 import { SkillsProgress } from '@/components/skills/SkillProgress';
 import React, { useState } from 'react';
 import { useTheme } from '@/context/ThemeProvider';
-import { useAuthStore } from '@/store/useAuthStore';
+;
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);

@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { PlusCircle, Trash2, Building, Briefcase, AlertCircle } from 'lucide-react';
 import { axiosInstance } from '@/lib/axios';
-import { useAuthStore } from '@/store/useAuthStore';
+
 import { useNavigate } from 'react-router-dom';
 
 const JobPostingPage = () => {
